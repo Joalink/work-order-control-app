@@ -1,0 +1,50 @@
+[
+    {
+        "model": "orders.Priority",
+        "pk": 1,
+        "fields": {
+            "priority_num": "Urgente",
+            "days": 1
+        }
+    },
+    {
+        "model": "orders.Priority",
+        "pk": 2,
+        "fields": {
+            "priority_num": "Prioridad 1",
+            "days": 2
+        }
+    },
+    {
+        "model": "orders.Priority",
+        "pk": 3,
+        "fields": {
+            "priority_num": "Prioridad 2",
+            "days": 4
+        }
+    },
+    {
+        "model": "orders.Priority",
+        "pk": 4,
+        "fields": {
+            "priority_num": "Prioridad 3",
+            "days": 8
+        }
+    },
+    {
+        "model": "orders.Priority",
+        "pk": 5,
+        "fields": {
+            "priority_num": "Prioridad 4",
+            "days": 15
+        }
+    },
+    {
+        "model": "orders.Priority",
+        "pk": 6,
+        "fields": {
+            "priority_num": "Prioridad 5",
+            "days": 30
+        }
+    }
+]

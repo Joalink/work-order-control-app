@@ -1,0 +1,16 @@
+[
+    {
+        "model": "orders.Shift",
+        "pk": 1,
+        "fields": {
+            "name": "SAMUEL"
+        }
+    },
+    {
+        "model": "orders.Shift",
+        "pk": 2,
+        "fields": {
+            "name": "IVAN"
+        }
+    }
+]

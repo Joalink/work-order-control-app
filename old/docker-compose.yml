@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  orders-system-backend:
+    build: ./orders-system-backend
+    container_name: orders-system-backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./orders-system-backend:/usr/src/app
+    command: python manage.py runserver 0.0.0.0:8080
+    depends_on:
+      - orders-system-db
+
+  orders-system-frontend:
+    build: ./orders-system-frontend
+    container_name: orders-system-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./orders-system-frontend:/usr/src/app
+    command: npm start
+
+  db:
+    image: postgres:12.1
+    environment:
+      POSTGRES_DB: orders-system
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
+  

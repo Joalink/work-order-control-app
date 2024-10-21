@@ -1,0 +1,23 @@
+[
+    {
+        "model": "orders.ShiftHours",
+        "pk": 1,
+        "fields": {
+            "status": "Material pendiente"
+        }
+    },
+    {
+        "model": "orders.GeneralStatus",
+        "pk": 2,
+        "fields": {
+            "status": "Trabajo por realizar"
+        }
+    },
+    {
+        "model": "orders.GeneralStatus",
+        "pk": 3,
+        "fields": {
+            "status": "En proceso de trabajo"
+        }
+    }
+]

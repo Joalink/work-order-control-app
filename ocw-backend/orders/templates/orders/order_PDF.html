@@ -1,0 +1,78 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Order {{ order.num_of_order }} report</title>
+        <style>
+            p {
+                font-size: 15px;
+                line-height: 0.7;
+            }
+            @page {
+                size: letter;
+                margin: 30px;
+            }
+            hr {
+                height: 1px;
+            }
+        </style>
+    </head>
+    <body>
+        <img src="{% static 'orders/reyma_logo.png' %}" alt="Example Image">
+        <div style="width: 100%; text-align: center;">
+            <p style="font-size: 25px;">Hoja de reporte de orden {{ order.num_of_order }}</p>
+            <hr>
+        </div>
+        
+        <p>Número de orden: <span style="font-weight: 700;">{{ order.num_of_order }}</span></p>
+        <p>Área que solicita: <span style="font-weight: 700;">{{ order.area }}</span></p>
+        <p>Descripción: <span style="font-weight: 700;">{{ order.description }}</span></p>
+        <p>Entrega: <span style="font-weight: 700;">{{ order.carried_by }}</span></p>
+        <p>Autoriza: <span style="font-weight: 700;">{{ order.authorized_by }}</span></p>
+        <p>Número de piezas: <span style="font-weight: 700;">{{ order.num_of_pieces }}</span></p>
+        <p>Fecha de asignación: <span style="font-weight: 700;">{{ order.assignment_date|date:"d/m/Y" }}</span></p>
+        <p>Prioridad: <span style="font-weight: 700;">{{ order.priority.priority_num }}</span></p>
+        <p>Servicio: <span style="font-weight: 700;">{{ order.service.s_type }}</span></p>
+
+        <p>Material: 
+            {% if order.need_material %} 
+                <span style="font-weight: 700;">Sí necesitó</span>
+            {% else %}
+                <span style="font-weight: 700;">No necesitó</span>
+            {% endif %}
+        </p>
+    
+        <p>Turno: <span style="font-weight: 700;">{{ order.assigned_works.first.shift.name }}</span></p>
+        <p>Operador: <span style="font-weight: 700;">{{ order.assigned_works.first.operator.full_name }}</span></p>
+        <p>Procesos que llevó: <span style="font-weight: 700;">{{ order.assigned_works.first.work_processes }}</span></p>
+        <p>Inicio de trabajo: <span style="font-weight: 700;">{{ order.assigned_works.first.start_date|date:"d/m/Y" }} a las {{ order.assigned_works.first.start_time }}</span></p>
+        <p>Fín de trabajo: <span style="font-weight: 700;">{{ order.assigned_works.first.end_date|date:"d/m/Y" }} a las {{ order.assigned_works.first.end_time }}</span></p>
+        <p>Días totales: <span style="font-weight: 700;">{{ order.assigned_works.first.total_days }}</span></p>
+        <p>Fecha de entrega: <span style="font-weight: 700;">{{ order.delivery_date|date:"d/m/Y" }}</span></p>
+        <p>Recoge: <span style="font-weight: 700;">{{ order.received_by }}</span></p>
+        <p>Entrega: <span style="font-weight: 700;">{{ order.delivered_by }}</span></p>
+
+        <div style="background-color: #ccc; padding: 7px 5px 5px 5px;">
+            <p style="font-size: 17px;">Órdenes de corte</p>
+        </div>
+
+        {% for cut_order in order.cut_orders.all %}
+            <p>Número de corte: <span style="font-weight: 700;">{{ cut_order.num_cut_order }}</span></p>
+            <p>Tipo de material: <span style="font-weight: 700;">{{ cut_order.material_type }}</span></p>
+            <p>Cantidad de material: <span style="font-weight: 700;">{{ cut_order.material_quantity }}</span></p>
+            <p>Solicitado el: <span style="font-weight: 700;">{{ cut_order.request_date|date:"d/m/Y" }}</span></p>
+            <p>Entregado el: <span style="font-weight: 700;">{{ cut_order.delivery_date|date:"d/m/Y" }}</span></p>
+            <p>Peso: <span style="font-weight: 700;">{{ cut_order.material_weight }} KG</span></p>
+            <p>Observaciones: <span style="font-weight: 700;">{{ cut_order.observation }}</span></p>
+            <hr>
+        {% empty %}
+            <p style="font-size: 15px; font-style: italic;">Sin órdenes de corte asignadas</p>
+            <hr>
+        {% endfor %}
+    
+    </body>
+</html>

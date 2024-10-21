@@ -1,0 +1,47 @@
+[
+    {
+        "model": "orders.ServiceType",
+        "pk": 1,
+        "fields": {
+            "s_type": "Rectificado",
+            "next_step": "Proceso"
+
+        }
+    },
+    {
+        "model": "orders.ServiceType",
+        "pk": 2,
+        "fields": {
+            "s_type": "Fabricación",
+            "next_step": "Fabricación"
+
+        }
+    },
+    {
+        "model": "orders.ServiceType",
+        "pk": 3,
+        "fields": {
+            "s_type": "Reparación",
+            "next_step": "Reparación"
+
+        }
+    },
+    {
+        "model": "orders.ServiceType",
+        "pk": 4,
+        "fields": {
+            "s_type": "Fabricación para Stock",
+            "next_step": "Fabricación"
+
+        }
+    },
+    {
+        "model": "orders.ServiceType",
+        "pk": 5,
+        "fields": {
+            "s_type": "Reparación para Stock",
+            "next_step": "Reparación"
+
+        }
+    }
+]
