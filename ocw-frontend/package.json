@@ -1,5 +1,5 @@
 {
-  "name": "rma-ocw-frontend",
+  "name": "ocw-frontend",
   "version": "1.0.0",
   "description": "An Electron application with React",
   "main": "./out/main/index.js",
@@ -20,9 +20,10 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
-    "@emotion/react": "^11.13.0",
+    "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@mui/material": "^5.16.6",
+    "@mui/material": "^5.16.7",
+    "@mui/x-charts": "^7.21.0",
     "axios": "^1.7.3",
     "moment-timezone": "^0.5.45",
     "react-feather": "^2.0.10",
