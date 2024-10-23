@@ -10,7 +10,6 @@ function createWindow() {
     height: 1080,
     show: false,
     frame: false,
-
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -20,7 +19,7 @@ function createWindow() {
 
   })
 
-  mainWindow.setAlwaysOnTop(true, "screen");
+  mainWindow.setAlwaysOnTop(false, "screen");
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -38,6 +37,14 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  // Disable keyboard shortcut to open devtools
+  // mainWindow.webContents.on('before-input-event', (event, input) => {
+  //   // Deshabilitar el atajo de teclado para abrir DevTools
+  //   if (input.key === 'I' && (input.control || input.meta) && (input.shift)) {
+  //       event.preventDefault(); // Evita abrir DevTools
+  //   }
+  // });
 }
 
 // This method will be called when Electron has finished
@@ -85,7 +92,16 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
+
 })
+
+// Disabled devtools
+// app.on('web-contents-created', (event, contents) => {
+//   contents.on('devtools-opened', () => {
+//       contents.closeDevTools();
+//   });
+// });
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

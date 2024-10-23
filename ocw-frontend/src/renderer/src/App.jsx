@@ -53,13 +53,13 @@ function AppContent() {
 
         <button 
         className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-2xl" onClick={handleDashboard}>
-          Graficos
+          Estadisticas
           <img src={DashboardIcon} alt="dashboard" className="w-60 h-60 filter-white"/>
         </button>
 
         <button className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-2xl" onClick={handleAnalytics}>
           Finanzas
-          <img src={AnalyticsIcon} alt="dashboard" className="w-60 h-60 filter-white"/>
+          <img src={AnalyticsIcon} alt="nce" className="w-60 h-60 filter-white"/>
         </button>
       </div>
     </>
