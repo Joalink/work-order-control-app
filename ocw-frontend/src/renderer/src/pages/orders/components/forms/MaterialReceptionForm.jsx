@@ -80,22 +80,19 @@ export default function MaterialReceptionForm({ onOrderCreated, refreshTrigger }
 
   const validate = () => {
     let tempErrors = {};
-    tempErrors.num_cut_order = formValues.num_cut_order ? '' : 'Favor de seleccionar una orden de corte';
-    tempErrors.material_weight = formValues.material_weight ? '' : 'Es requerido el peso del material';
+    tempErrors.num_cut_order = formValues.num_cut_order ? '' : 'Please enter the cutting order number';
+    tempErrors.material_weight = formValues.material_weight ? '' : 'Material weight is reuqired';
     setErrors(tempErrors);
     return Object.values(tempErrors).every((x) => x === '');
   };
 
   const fetchOrdersForMaterialReception = async () => {
     try {
-      const data = await apiService.get('/mat_for_deli');
-      console.log('for marterial reception loaded:', data);
+      const data = await apiService.get('orders/api/mat_for_deli')
       setOrders(data)
       } catch (err) {
         setError(err.message);
-        console.error('failed to load marterial reception orders:',err);
-      } finally {
-    }
+      } 
   };
 
   const handleInputChange = (e) => {
@@ -126,20 +123,14 @@ export default function MaterialReceptionForm({ onOrderCreated, refreshTrigger }
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log('Form submitted successfully', formValues);
       try {
-          const response = await apiService.patch(`v1/cuts/${formValues.id}/`, formValues);
-          console.log('Reception material order created:', response)
+          const response = await apiService.patch(`orders/api/v1/cuts/${formValues.id}/`, formValues)
           if (onOrderCreated) {
             setFormValues(initialFormValues);
             onOrderCreated(); 
           } 
       } catch (err) {
         setError(err.message);
-        console.error('Failed to create Order:', err); 
-        if (err.response) {
-          console.error('Error response data:', err.response.data);
-        }
       }
       handleClose();
     }
@@ -147,7 +138,7 @@ export default function MaterialReceptionForm({ onOrderCreated, refreshTrigger }
 
   return (
     <div>
-      <Button variant='contained' color='success' onClick={handleOpen}>Recepcion de Material</Button>
+      <Button variant='contained' color='success' onClick={handleOpen}>Material reception</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -156,7 +147,7 @@ export default function MaterialReceptionForm({ onOrderCreated, refreshTrigger }
       >
         <Box sx={style}>
           <header className='flex justify-between align-center'>
-            <div className='flex items-center text-neutral-500 font-semibold'>Recepcion de Material</div>
+            <div className='flex items-center text-neutral-500 font-semibold'>Material reception</div>
             <Button onClick={handleClose}><X size={24} color="gray" /></Button>
           </header>
           <body className='max-w-2xl px-5 overflow-hidden py-4'>
@@ -171,11 +162,11 @@ export default function MaterialReceptionForm({ onOrderCreated, refreshTrigger }
                 <FormGroup>
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
-                      <InputLabel size='small' error={!!errors.num_cut_order}>No. de orden de corte</InputLabel>
+                      <InputLabel size='small' error={!!errors.num_cut_order}>Cutting order number</InputLabel>
                         <Select
                           fullWidth
                           size='small'
-                          label="No. de orden de corte"
+                          label="Cutting order number"
                           name="num_cut_order"
                           value={formValues.num_cut_order}
                           onChange={handleInputChange}
@@ -194,7 +185,7 @@ export default function MaterialReceptionForm({ onOrderCreated, refreshTrigger }
                       <TextField
                         fullWidth
                         size='small'
-                        label="No. de orden"
+                        label="Order number"
                         name="order_with_area"
                         disabled
                         value={formValues.order_with_area}
@@ -205,7 +196,7 @@ export default function MaterialReceptionForm({ onOrderCreated, refreshTrigger }
                       <TextField
                         fullWidth
                         size='small'
-                        label="No. de piezas"
+                        label="No. of pieces"
                         name="num_pieces"
                         type='number'
                         disabled
@@ -217,7 +208,7 @@ export default function MaterialReceptionForm({ onOrderCreated, refreshTrigger }
                       <TextField
                         fullWidth
                         size='small'
-                        label="Tipo de material"
+                        label="Material type"
                         name="material_type"
                         disabled
                         value={formValues.material_type}
@@ -228,18 +219,18 @@ export default function MaterialReceptionForm({ onOrderCreated, refreshTrigger }
                       <TextField
                         fullWidth
                         size='small'
-                        label="Cantidad de material"
+                        label="Material quantity"
                         name="material_quantity"
                         disabled
                         value={formValues.material_quantity}
                         onChange={handleInputChange}
                       />
                     </Grid>
-                    <Grid item xs={10}>
+                    <Grid item xs={12}>
                       <TextField
                         fullWidth
                         size='small'
-                        label="Peso del material"
+                        label="Material weight"
                         name="material_weight"
                         type="number"
                         inputProps={{ min: "0", step: "1" }}
@@ -249,69 +240,25 @@ export default function MaterialReceptionForm({ onOrderCreated, refreshTrigger }
                         helperText={errors.material_weight}
                       />
                     </Grid>
-                    <Grid item xs={2}>
-                      <FormControl fullWidth size='small'>
-                        <InputLabel id="priority">Unidad</InputLabel>
-                        <Select
-                          label="Unidad"
-                          name='priority'
-                          value={formValues.priority}
-                          onChange={handleInputChange}
-                          error={!!errors.priority}
-                        >
-                          <MenuItem value="1">G</MenuItem>
-                          <MenuItem value="2">KG</MenuItem>
-                          <MenuItem value="3">LB</MenuItem>
-                        </Select>
-                        {<FormHelperText style={{color:'red'}}>{errors.priority}</FormHelperText>}
-                      </FormControl>
-                    </Grid>
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
                         size='small'
-                        label="Observaciones"
+                        label="Observations"
                         name="observation"
                         value={formValues.observation}
                         onChange={handleInputChange}
                         helperText={errors.observation}
                       />
                     </Grid>
-                    {/* <Grid item xs={6}>
-                      <TextField
-                        fullWidth
-                        size='small'
-                        label="Fecha de solicitud"
-                        name="request_date"
-                        type="date"
-                        disabled
-                        InputLabelProps={{shrink: true}}                        
-                        value={formValues.request_date}
-                        onChange={handleInputChange}
-                      />
-                    </Grid> */}
-                    {/* <Grid item xs={6}>
-                      <TextField
-                        fullWidth
-                        size='small'
-                        label="Fecha de entrega"
-                        name="delivery_date"
-                        type="date"
-                        disabled
-                        value={formValues.delivery_date}
-                        onChange={handleInputChange}
-                        error={!!errors.delivery_date}
-                        helperText={errors.delivery_date}
-                      />
-                    </Grid> */}
                   </Grid>
                 </FormGroup>
               </FormControl>
             </Box>
           </body>
           <footer className='flex justify-end items-center gap-4'>
-            <Button variant="outlined" color="success" onClick={handleClose}>Cancelar</Button>
-            <Button variant="contained" color="success" onClick={handleSubmit}>Aceptar</Button>
+            <Button variant="outlined" color="success" onClick={handleClose}>Cancel</Button>
+            <Button variant="contained" color="success" onClick={handleSubmit}>Accept</Button>
           </footer>
         </Box>
       </Modal>

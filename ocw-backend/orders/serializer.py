@@ -1,9 +1,6 @@
-import datetime
-
 from rest_framework import serializers
 from .models import WorkOrder, CutOrder, AssignedWork, Shift, ServiceType, Priority, Worker
 from .utils import general_status, cut_order, material_status
-
 
 class WorkOrderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -71,7 +68,7 @@ class MainTableSerializer(serializers.ModelSerializer):
         
     def get_general_status(self, obj):
         return obj.current_status.status
-      
+
     def get_cut_order(self, obj):
         return cut_order(obj)
         
@@ -97,7 +94,7 @@ class CutTableSerializer(serializers.ModelSerializer):
         fields = ('id', 'num_of_order', 'description', 'num_of_pieces', 'cut_order', 'material_status', 'assigned_cuts')
         
     def get_cut_order(self, obj):
-       return cut_order(obj)
+        return cut_order(obj)
         
     def get_material_status(self, obj):
         return material_status(obj)
@@ -154,7 +151,6 @@ class CutsByOrderSerializer(serializers.ModelSerializer):
     def get_work_order(self, obj):
         return obj.work_order.num_of_order
     
-     
 class FinishedOrdersSerializer(serializers.ModelSerializer):
     service = serializers.SerializerMethodField() 
     
@@ -194,7 +190,7 @@ class MaterialForDeliverySerializer(serializers.ModelSerializer):
     
 class SimpleOrderSerializer(serializers.ModelSerializer):
     order_with_area = serializers.SerializerMethodField()
-     
+    
     class Meta: 
         model = WorkOrder
         fields = ('id', 'order_with_area', 'description', 'service', 'assignment_date' )
@@ -254,7 +250,7 @@ class OrderToConcludeSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkOrder
         fields = ('id', 'num_of_order', 'description', 'current_status', 'service', 'assignment_date', 
-                  'work_end_date', 'work_shift', 'work_worker', 'work_processes', 'need_material')
+                    'work_end_date', 'work_shift', 'work_worker', 'work_processes', 'need_material')
         
     def get_work_end_date(self, obj):
         return obj.assigned_works.last().end_date
@@ -279,5 +275,3 @@ class OrderToConcludeSerializer(serializers.ModelSerializer):
             return 'Sí'
         return 'No'
     
-    
-

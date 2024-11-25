@@ -9,9 +9,7 @@ from django.template.loader import render_to_string, get_template
 from .serializer import *
 from .models import WorkOrder, CutOrder, AssignedWork, GeneralStatus, ServiceType, Priority, Worker, Shift
 from .utils import is_work_to_perform, check_deliveries
-
-
-
+import os
 
 # Handle creation and updates of work orders
 class WorkOrdersView(viewsets.ModelViewSet):
@@ -69,7 +67,6 @@ class CutOrdersView(viewsets.ModelViewSet):
         if check_deliveries(order):
             order.current_status = GeneralStatus.objects.get(status='Trabajo por realizar')
             order.save()
-      
         
 # Handle creation and updates of assigned works
 class WorksView(viewsets.ModelViewSet):
@@ -134,7 +131,7 @@ class CutsByOrderTableView(generics.ListAPIView):
             queryset = CutOrder.objects.all()
         
         return queryset
-   
+
 cuts_by_order_table_view = CutsByOrderTableView.as_view()
 
 
@@ -143,7 +140,7 @@ class NewOrderFormView(APIView):
         
         service_serializer = ServiceSerializer(ServiceType.objects.all(), many=True)
         priority_serializer = PrioritySerializer(Priority.objects.all(), many=True)
-       
+
         service_priority = {
             'services': service_serializer.data,
             'priorities': priority_serializer.data
@@ -161,7 +158,7 @@ class FinishedOrdersView(generics.ListAPIView):
         queryset = WorkOrder.objects.filter(current_status=finished).all()
         
         return queryset
-   
+
 finished_orders_view = FinishedOrdersView.as_view()
 
 
@@ -172,14 +169,14 @@ class OrdersForCutView(generics.ListAPIView):
         queryset = orders_with_work.filter(delivery_date__isnull=True, need_material=True, works=0).all()
         
         return queryset
-   
+        
 orders_for_cut_view = OrdersForCutView.as_view()
 
 
 class MaterialForDeliveryView(generics.ListAPIView):
     serializer_class = MaterialForDeliverySerializer
     queryset = CutOrder.objects.filter(delivery_date__isnull=True).all()
-   
+    
 material_for_delivery_view = MaterialForDeliveryView.as_view()
 
 
@@ -190,7 +187,7 @@ class WorkToAssignView(APIView):
         
         orders_serializer = SimpleOrderSerializer(WorkOrder.objects.filter(current_status=to_perform).all(), many=True, read_only=True)
         shift_w_serializer = ShiftWorkersSerializer(Shift.objects.all(), many=True, read_only=True)
-       
+
         orders_shift_w = {
             'orders': orders_serializer.data,
             'shift_workers': shift_w_serializer.data
@@ -219,24 +216,48 @@ class OrderToConcludeView(generics.ListAPIView):
     
 order_to_conclude_view = OrderToConcludeView.as_view()
 
-
 class GeneratePDFView(APIView):
 
     def get(self, request, *args, **kwargs):
-       
-        PDF_order = get_object_or_404(WorkOrder.objects.filter(current_status=GeneralStatus.objects.get(status='Entregado')), id=self.kwargs.get('id'))
         
-        template = get_template('orders/order_PDF.html')
-        context = {'order':  PDF_order}
-        html = template.render(context)
+        order = get_object_or_404(WorkOrder.objects.filter(current_status=GeneralStatus.objects.get(status='Entregado')), id=self.kwargs.get('id'))
         
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="{PDF_order.PDF_name}.pdf"'
-        pdf = pisa.CreatePDF(html, dest=response)
-        
-        if pdf.err:
-            return HttpResponse('Error generating PDF <pre>' + html + '</pre>')
-        
-        return response
-        
+        order_data = {
+            "num_of_order": order.num_of_order,
+            "area": order.area,
+            "description": order.description,
+            "carried_by": order.carried_by,
+            "authorized_by": order.authorized_by,
+            "num_of_pieces": order.num_of_pieces,
+            "assignment_date": order.assignment_date.strftime("%d/%m/%Y") if order.assignment_date else None,
+            "priority_num": order.priority.priority_num if order.priority else None,
+            "service_type": order.service.s_type if order.service else None,
+            "need_material": "Sí necesitó" if order.need_material else "No necesitó",
+            "delivery_date": order.delivery_date.strftime("%d/%m/%Y") if order.delivery_date else None,
+            "received_by": order.received_by,
+            "delivered_by": order.delivered_by,
+            "assigned_work": {
+                "shift_name": order.assigned_works.first().shift.name if order.assigned_works.exists() else None,
+                "operator_full_name": order.assigned_works.first().operator.full_name if order.assigned_works.exists() else None,
+                "work_processes": order.assigned_works.first().work_processes if order.assigned_works.exists() else None,
+                "start_date": order.assigned_works.first().start_date.strftime("%d/%m/%Y") if order.assigned_works.exists() else None,
+                "start_time": order.assigned_works.first().start_time if order.assigned_works.exists() else None,
+                "end_date": order.assigned_works.first().end_date.strftime("%d/%m/%Y") if order.assigned_works.exists() else None,
+                "end_time": order.assigned_works.first().end_time if order.assigned_works.exists() else None,
+                "total_days": order.assigned_works.first().total_days if order.assigned_works.exists() else None,
+            },
+            "cut_orders": [
+                {
+                    "num_cut_order": cut_order.num_cut_order,
+                    "material_type": cut_order.material_type,
+                    "material_quantity": cut_order.material_quantity,
+                    "request_date": cut_order.request_date.strftime("%d/%m/%Y") if cut_order.request_date else None,
+                    "delivery_date": cut_order.delivery_date.strftime("%d/%m/%Y") if cut_order.delivery_date else None,
+                    "material_weight": cut_order.material_weight,
+                    "observation": cut_order.observation,
+                }
+                for cut_order in order.cut_orders.all()
+            ]
+        }
+        return JsonResponse(order_data)
 generate_pdf_view = GeneratePDFView.as_view()

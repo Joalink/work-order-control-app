@@ -5,24 +5,25 @@ import {
   Route,
   HashRouter
 } from "react-router-dom";
-import TopBar from './components/TopBar'
-import Header from './components/Header';
 import DashboardIcon from './assets/icons/dashboard_icon.svg';
 import OrdersIcon from './assets/icons/orders_icon.svg'
 import AnalyticsIcon from './assets/icons/analytics_icon.svg'
+import InventoryIcon from './assets/icons/inventory.svg'
 
 import DashboardPage from './pages/dashboard/DashboardPage';
 import OrdersPage from './pages/orders/OrdersPage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
+import Inventory from './pages/inventory/Inventory';
 
-import NewOrderPage from './pages/orders/NewOrderPage';
-import ProcessOrderPage from './pages/orders/ProcessOrderPage';
-import CutOrderPage from './pages/orders/CutOrderPage';
-import FinishedOrderPage from './pages/orders/FinishedOrderPage';
+import Active from './pages/orders/Active';
+import Processed from './pages/orders/Processed';
+import Cutting from './pages/orders/Cutting';
+import Finished from './pages/orders/Finished';
 
-import DateTimeZone from './utils/DateTimeZone';
-
-
+import Locations from './pages/inventory/Locations';
+import Products from './pages/inventory/Products';
+import Movements from './pages/inventory/Movements';
+import Stock from './pages/inventory/Stock';
 
 function AppContent() {
   const navigate = useNavigate();
@@ -39,27 +40,43 @@ function AppContent() {
     navigate('analytics')
   }
 
+  const handleinventory = () => {
+    navigate('inventory')
+  }
+
+
   return (
     <>
-      <TopBar></TopBar>
-      <DateTimeZone/>
-      <Header></Header>
-      
-      <div className='flex justify-center py-8 space-x-10 ' >
-        <button className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-2xl" onClick={handleOrders}>
-          Ordenes
+      <div className='flex flex-wrap justify-center py-8 space-x-4 md:space-x-10 ' >
+        <button 
+          className="flex flex-col items-center space-y-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-2xl w-40 md:w-48 lg:w-56 xl:w-60" 
+          onClick={handleOrders}
+        >
+          Orders
           <img src={OrdersIcon} alt="orders" className="w-60 h-60 filter-white"/>
         </button> 
 
         <button 
-        className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-2xl" onClick={handleDashboard}>
-          Estadisticas
+          className="flex flex-col items-center space-y-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-2xl w-40 md:w-48 lg:w-56 xl:w-60"
+          onClick={handleDashboard}
+        >
+          Dashboard
           <img src={DashboardIcon} alt="dashboard" className="w-60 h-60 filter-white"/>
         </button>
 
-        <button className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-2xl" onClick={handleAnalytics}>
-          Finanzas
+        <button 
+          className="flex flex-col items-center space-y-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-2xl w-40 md:w-48 lg:w-56 xl:w-60"
+          onClick={handleAnalytics}
+        >
+          Finances
           <img src={AnalyticsIcon} alt="nce" className="w-60 h-60 filter-white"/>
+        </button>
+        <button 
+          className="flex flex-col items-center space-y-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-2xl w-40 md:w-48 lg:w-56 xl:w-60"
+          onClick={handleinventory}
+        >
+          Inventory
+          <img src={InventoryIcon} alt="nce" className="w-60 h-60 filter-white"/>
         </button>
       </div>
     </>
@@ -74,13 +91,20 @@ function App() {
         <Routes>
           <Route  path='/' element={<AppContent/>}/>
           <Route path='/orders' element={<OrdersPage/>} >
-              <Route  path='neworder' element={<NewOrderPage/>} />
-              <Route  path='processorder' element={<ProcessOrderPage/>} />
-              <Route  path='cutorder' element={<CutOrderPage/>}/>   
-              <Route  path='finishedorder' element={<FinishedOrderPage/>}/>    
+            <Route  path='active' element={<Active/>} />
+            <Route  path='processed' element={<Processed/>} />
+            <Route  path='cutting' element={<Cutting/>}/>   
+            <Route  path='finished' element={<Finished/>}/>    
           </Route>
           <Route  path='/dashboard' element={<DashboardPage/>}/>
           <Route  path='/analytics' element={<AnalyticsPage/>}/>
+          <Route  path='/inventory' element={<Inventory/>}>
+            <Route path='locations' element={<Locations/>}/>
+            <Route path='products' element={<Products/>}/>
+            <Route path='movements' element={<Movements/>}/>
+            <Route path='stock' element={<Stock/>}/>
+          </Route>
+
         </Routes>
       </HashRouter>
     </>

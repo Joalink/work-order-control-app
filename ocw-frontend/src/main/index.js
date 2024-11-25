@@ -8,18 +8,25 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 1920,
     height: 1080,
+    minWidth: 1160,
+    minHeight: 850,
     show: false,
     frame: false,
+
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
     }
-
   })
 
-  mainWindow.setAlwaysOnTop(false, "screen");
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.insertCSS('body { overflow: hidden; }');  // Desactiva el scroll de la página globalmente
+  });
+
+
+  mainWindow.setAlwaysOnTop(false, 'screen')
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -37,14 +44,6 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
-
-  // Disable keyboard shortcut to open devtools
-  // mainWindow.webContents.on('before-input-event', (event, input) => {
-  //   // Deshabilitar el atajo de teclado para abrir DevTools
-  //   if (input.key === 'I' && (input.control || input.meta) && (input.shift)) {
-  //       event.preventDefault(); // Evita abrir DevTools
-  //   }
-  // });
 }
 
 // This method will be called when Electron has finished
@@ -64,26 +63,26 @@ app.whenReady().then(() => {
   // IPC test
   // ipcMain.on('ping', () => console.log('pong'))
 
-  ipcMain.on("close-window", ()=>{
-    const currentWindow = BrowserWindow.getFocusedWindow();
-    if(currentWindow){
+  ipcMain.on('close-window', () => {
+    const currentWindow = BrowserWindow.getFocusedWindow()
+    if (currentWindow) {
       currentWindow.close()
     }
   })
 
-  ipcMain.on("minimize-window", ()=>{
-    const currentWindow = BrowserWindow.getFocusedWindow();
-    if(currentWindow){
+  ipcMain.on('minimize-window', () => {
+    const currentWindow = BrowserWindow.getFocusedWindow()
+    if (currentWindow) {
       currentWindow.minimize()
     }
   })
 
-  ipcMain.on("maximize-window", () => {
-    const currentWindow = BrowserWindow.getFocusedWindow();
+  ipcMain.on('maximize-window', () => {
+    const currentWindow = BrowserWindow.getFocusedWindow()
     if (currentWindow) {
-      currentWindow.maximize();
+      currentWindow.maximize()
     }
-  });
+  })
 
   createWindow()
 
@@ -92,16 +91,7 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
-
-
 })
-
-// Disabled devtools
-// app.on('web-contents-created', (event, contents) => {
-//   contents.on('devtools-opened', () => {
-//       contents.closeDevTools();
-//   });
-// });
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

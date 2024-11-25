@@ -121,11 +121,10 @@ const updateToUpperCase = (name, value) => {
 
   const validate = () => {
     let tempErrors = {};
-    tempErrors.num_of_order = formValues.num_of_order ? '' : 'Ingrese la orden a finalizar';
-    tempErrors.received_by = formValues.received_by ? '' : 'Favor de indicar quien recibe';
-    tempErrors.delivered_by = formValues.delivered_by ? '' : 'Favor de indicar quien entrega';
-    tempErrors.delivery_date = formValues.delivery_date ? '' : 'Favor de indicar fecha entrega';
-
+    tempErrors.num_of_order = formValues.num_of_order ? '' : 'Please enter the order to finish';
+    tempErrors.received_by = formValues.received_by ? '' : 'Please indicate hwo recibe';
+    tempErrors.delivered_by = formValues.delivered_by ? '' : 'Plase indicate who delivery';
+    tempErrors.delivery_date = formValues.delivery_date ? '' : 'Please indicate delivery date';
 
     setErrors(tempErrors);
     return Object.values(tempErrors).every((x) => x === '');
@@ -133,40 +132,30 @@ const updateToUpperCase = (name, value) => {
 
   const fetchOrdersToConclude = async () => {
     try {
-      const data = await apiService.get('/order_to_conclude');
-      console.log('loaded to conclude:', data);
+      const data = await apiService.get('orders/api/order_to_conclude')
       setOrders(data)
       } catch (err) {
         setError(err.message);
-        console.error('failed to load cut orders:',err);
-      } finally {
-    }
+      }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      // console.log('Form submitted successfully', formValues);
       const dataToSend = {
-
         delivery_date: formValues.delivery_date,
         received_by: formValues.received_by,
         delivered_by: formValues.delivered_by
-
       }
       try {
-          const response = await apiService.patch(`v1/orders/${formValues.id}/`, dataToSend);
-          console.log('Cut Order created:', response)
-
+          const response = await apiService.patch(`orders/api/v1/orders/${formValues.id}/`, dataToSend);
           if (onOrderCreated) {
             setFormValues(initialFormValues);
             onOrderCreated(); 
           }
-
       } catch (err) {
         setError(err.message);
         console.error('Failed to create Order:', err); 
-
         if (err.response) {
           console.error('Error response data:', err.response.data);
         }
@@ -177,7 +166,7 @@ const updateToUpperCase = (name, value) => {
 
   return (
     <div>
-      <Button variant='contained' color='success' onClick={handleOpen}>Finalizar Orden</Button>
+      <Button variant='contained' color='success' onClick={handleOpen}>Finalize Order</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -186,7 +175,7 @@ const updateToUpperCase = (name, value) => {
       >
         <Box sx={style}>
           <header className='flex justify-between align-center'>
-            <div className='flex items-center text-neutral-500 font-semibold'>Finalizar Orden</div>
+            <div className='flex items-center text-neutral-500 font-semibold'>Finalize Order</div>
             <Button onClick={handleClose}><X size={24} color="gray" /></Button>
           </header>
           <body className='max-w-2xl px-5 overflow-hidden py-4'>
@@ -202,12 +191,12 @@ const updateToUpperCase = (name, value) => {
                   <Grid container spacing={2}>
 
                     <Grid item xs={12}>
-                      <InputLabel size='small' error={!!errors.num_of_order}>No. de orden</InputLabel>
+                      <InputLabel size='small' error={!!errors.num_of_order}>Order number</InputLabel>
                       <Select
                         fullWidth
                         size='small'
   
-                        label="No. de orden"
+                        label="Order number"
                         name="num_of_order"
                         value={formValues.num_of_order}
                         onChange={handleInputChange}
@@ -229,7 +218,7 @@ const updateToUpperCase = (name, value) => {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Descripcion"
+                        label="Description"
                         name="description"
                         disabled
                         value={formValues.description}
@@ -240,7 +229,7 @@ const updateToUpperCase = (name, value) => {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Estado"
+                        label="Status"
                         name="current_status"
                         disabled
                         value={formValues.current_status}
@@ -251,7 +240,7 @@ const updateToUpperCase = (name, value) => {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Servicio"
+                        label="Service"
                         name="service"
                         disabled
                         value={formValues.service}
@@ -262,7 +251,7 @@ const updateToUpperCase = (name, value) => {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Turno"
+                        label="Shift"
                         name="work_shift"
                         disabled
                         value={formValues.work_shift}
@@ -273,7 +262,7 @@ const updateToUpperCase = (name, value) => {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Operador"
+                        label="Worker"
                         name="work_worker"
                         disabled
                         value={formValues.work_worker}
@@ -284,7 +273,7 @@ const updateToUpperCase = (name, value) => {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Proceso"
+                        label="Proccess"
                         name="work_processes"
                         disabled
                         value={formValues.work_processes}
@@ -295,7 +284,7 @@ const updateToUpperCase = (name, value) => {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Estado del material"
+                        label="Material Status"
                         name="need_material"
                         disabled
                         value={formValues.need_material}
@@ -306,7 +295,7 @@ const updateToUpperCase = (name, value) => {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Recibe"
+                        label="Received"
                         name="received_by"
                         value={formValues.received_by}
                         onChange={handleInputChange}
@@ -318,7 +307,7 @@ const updateToUpperCase = (name, value) => {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Entrega"
+                        label="Delivery"
                         name="delivered_by"
                         value={formValues.delivered_by}
                         onChange={handleInputChange}
@@ -326,64 +315,14 @@ const updateToUpperCase = (name, value) => {
                         helperText={errors.delivered_by}
                       />
                     </Grid>
-                    {/* <Grid item xs={6}>
-                      <TextField
-                        fullWidth
-                        size='small'
-                        label="Fecha de inicio"
-                        name="assignment_date"
-                        type="date"
-                        disabled
-                        InputLabelProps={{shrink: true}}                        
-                        value={formValues.assignment_date}
-                        onChange={handleInputChange}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        fullWidth
-                        size='small'
-                        label="Fecha de termino"
-                        name="work_end_date"
-                        type="date"
-                        disabled
-                        InputLabelProps={{shrink: true}}                        
-                        value={formValues.work_end_date}
-                        onChange={handleInputChange}
-                      />
-                    </Grid> */}
-
-
-
-
-
-                    {/* <Grid item xs={6}>
-                      <TextField
-                        fullWidth
-                        size='small'
-                        label="Fecha de entrega"
-                        name="delivery_date"
-                        type="date"
-                        InputLabelProps={{shrink: true}}                        
-                        value={formValues.delivery_date}
-                        onChange={handleInputChange}
-                        error={!!errors.delivery_date}
-                        helperText={errors.delivery_date}
-                      />
-                    </Grid> */}
-
-
-
-
-
                   </Grid>
                 </FormGroup>
               </FormControl>
             </Box>
           </body>
           <footer className='flex justify-end items-center gap-4'>
-            <Button variant="outlined" color="success" onClick={handleClose}>Cancelar</Button>
-            <Button ype="submit" variant="contained" color="success" onClick={handleSubmit}>Aceptar</Button>
+            <Button variant="outlined" color="success" onClick={handleClose}>Cancel</Button>
+            <Button ype="submit" variant="contained" color="success" onClick={handleSubmit}>Accept</Button>
           </footer>
         </Box>
       </Modal>

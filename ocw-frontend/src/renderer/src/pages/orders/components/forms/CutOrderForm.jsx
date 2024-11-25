@@ -100,43 +100,35 @@ export default function CutOrderForm({ onOrderCreated }) {
 
   const validate = () => {
     let tempErrors = {};
-    tempErrors.order_with_area = formValues.order_with_area ? '' : 'Ingrese la orden a seleccionar';
-    tempErrors.num_of_pieces = formValues.num_of_pieces ? '': 'Ingrese la cantidad de piezas';
-    tempErrors.num_cut_order = formValues.num_cut_order ? '': 'Ingrese numero de orden de corte'; 
-    tempErrors.material_type = formValues.material_type ? '' : 'Ingrese el tipo de material';
-    tempErrors.material_quantity = formValues.material_quantity ? '' : 'Ingrese la cantidad de material';
+    tempErrors.order_with_area = formValues.order_with_area ? '' : 'Enter the order to select';
+    tempErrors.num_of_pieces = formValues.num_of_pieces ? '': 'Enter the number of pieces';
+    tempErrors.num_cut_order = formValues.num_cut_order ? '': 'Enter the number of cut order'; 
+    tempErrors.material_type = formValues.material_type ? '' : 'Enter the material type';
+    tempErrors.material_quantity = formValues.material_quantity ? '' : 'Enter the material quantity';
     setErrors(tempErrors);
     return Object.values(tempErrors).every((x) => x === '');
   };
 
   const fetchOrdersForCut = async () => {
     try {
-      const data = await apiService.get('/orders_for_cut');
-      // console.log('loaded success', data);
+      const data = await apiService.get('orders/api/orders_for_cut')
       setOrders(data)
       } catch (err) {
         setError(err.message);
-        console.error('failed to load cut orders:',err);
       } 
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log('Form submitted successfully', formValues);
       try {
-          const response = await apiService.post('v1/cuts/', formValues);
-          console.log('Cut Order created:', response)
+          const response = await apiService.post('orders/api/v1/cuts/', formValues)
           if (onOrderCreated) {
             setFormValues(initialFormValues);
             onOrderCreated(); 
           } 
       } catch (err) {
         setError(err.message);
-        console.error('Failed to create Order:', err); 
-        if (err.response) {
-          console.error('Error response data:', err.response.data);
-        }
       }
       handleClose();
     }
@@ -144,7 +136,7 @@ export default function CutOrderForm({ onOrderCreated }) {
 
   return (
     <div>
-      <Button variant='contained' color='primary' onClick={handleOpen}>Nuevo Corte</Button>
+      <Button variant='contained' color='primary' onClick={handleOpen}>New Cut</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -153,7 +145,7 @@ export default function CutOrderForm({ onOrderCreated }) {
       >
         <Box sx={style}>
           <header className='flex justify-between align-center'>
-            <div className='flex items-center text-neutral-500 font-semibold'>Nuevo Corte</div>
+            <div className='flex items-center text-neutral-500 font-semibold'>New Cut</div>
             <Button onClick={handleClose}><X size={24} color="gray" /></Button>
           </header>
           <body className='max-w-2xl px-5 overflow-hidden py-4'>
@@ -168,11 +160,11 @@ export default function CutOrderForm({ onOrderCreated }) {
                 <FormGroup>
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
-                      <InputLabel size='small' error={!!errors.order_with_area}>No. de orden</InputLabel>
+                      <InputLabel size='small' error={!!errors.order_with_area}>Order number</InputLabel>
                       <Select
                         fullWidth
                         size='small'
-                        label="No. de orden"
+                        label="Order number" 
                         name="order_with_area"
                         value={formValues.order_with_area}
                         onChange={handleInputChange}
@@ -192,7 +184,7 @@ export default function CutOrderForm({ onOrderCreated }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Descripcion"
+                        label="Description"
                         name="description"
                         disabled
                         value={formValues.description}
@@ -203,7 +195,7 @@ export default function CutOrderForm({ onOrderCreated }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="No. piezas"
+                        label="No. of pieces"
                         name="num_of_pieces"
                         type="number"
                         disabled
@@ -217,7 +209,7 @@ export default function CutOrderForm({ onOrderCreated }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="No. orden de corte"
+                        label="Cutting order number"
                         name="num_cut_order"
                         type='number'
                         inputProps={{ min: "0", step: "1" }}
@@ -232,7 +224,7 @@ export default function CutOrderForm({ onOrderCreated }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Tipo de material"
+                        label="Material type"
                         name="material_type"
                         value={formValues.material_type}
                         onChange={handleInputChange}
@@ -244,7 +236,7 @@ export default function CutOrderForm({ onOrderCreated }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Cantidad de material"
+                        label="Material quantity"
                         name="material_quantity"
                         inputProps={{ min: "0", step: "1" }}
                         value={formValues.material_quantity}
@@ -253,28 +245,14 @@ export default function CutOrderForm({ onOrderCreated }) {
                         helperText={errors.material_quantity}
                       />
                     </Grid>
-
-                    {/* <Grid item xs={6}>
-                      <TextField
-                        fullWidth
-                        size='small'
-                        label="Fecha de solicitud"
-                        name="date"
-                        type="date"
-                        value={formValues.date}
-                        onChange={handleInputChange}
-                        error={!!errors.date}
-                        helperText={errors.date}
-                      />
-                    </Grid> */}
                   </Grid>
                 </FormGroup>
               </FormControl>
             </Box>
           </body>
           <footer className='flex justify-end items-center gap-4'>
-            <Button variant="outlined" onClick={handleClose}>Cancelar</Button>
-            <Button ype="submit" variant="contained" color="primary" onClick={handleSubmit}>Aceptar</Button>
+            <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+            <Button ype="submit" variant="contained" color="primary" onClick={handleSubmit}>Accept</Button>
           </footer>
         </Box>
       </Modal>

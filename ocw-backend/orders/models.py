@@ -1,8 +1,5 @@
-import datetime
-
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
-
+import datetime
 
 class ShiftHours(models.Model):
     from_time = models.TimeField()
@@ -32,7 +29,7 @@ class Worker(models.Model):
     @property
     def full_name(self):
         return f'{self.first_name} {self.last_name}'.upper()
-       
+        
     def __str__(self):
         return f'{self.first_name} {self.last_name}'.upper()
     
@@ -128,3 +125,4 @@ class AssignedWork(models.Model):
         if self.end_date:
             return (self.end_date - self.start_date).days
         return 'Work not finished'
+    

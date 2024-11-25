@@ -89,15 +89,15 @@ export default function NewOrderForm({ onOrderCreated }) {
 
   const validate = () => {
     let tempErrors = {};
-    tempErrors.num_of_order = formValues.num_of_order ? '' : 'Numero de orden es requerido';
-    tempErrors.description = formValues.description ? '' : 'Favor de escribir una descripcion';
-    tempErrors.area = formValues.area ? '' : 'Area que solicita es requerida';
-    tempErrors.carried_by = formValues.carried_by ? '' : 'Persona que entrega es requerido';
-    tempErrors.authorized_by = formValues.authorized_by ? '' : 'Persona que autoriza es requerido';
-    tempErrors.num_of_pieces = formValues.num_of_pieces ? '': 'Ingrese la cantidad de piezas'; 
-    tempErrors.priority = formValues.priority ? '' : 'Asigne la prioridad de la orden';
-    tempErrors.service = formValues.service ? '' : 'Asigne el tipo de servicio';
-    tempErrors.assignment_date = formValues.assignment_date ? '' : 'Ingrese la fecha de inicio'; 
+    tempErrors.num_of_order = formValues.num_of_order ? '' : 'Number of order is required';
+    tempErrors.description = formValues.description ? '' : 'Please add a description';
+    tempErrors.area = formValues.area ? '' : 'Applicant area is required';
+    tempErrors.carried_by = formValues.carried_by ? '' : 'Person delivery is required';
+    tempErrors.authorized_by = formValues.authorized_by ? '' : 'Authorizing person is reuqired';
+    tempErrors.num_of_pieces = formValues.num_of_pieces ? '': 'Enter the number of pieces'; 
+    tempErrors.priority = formValues.priority ? '' : 'Assing the order priority';
+    tempErrors.service = formValues.service ? '' : 'Assign the service';
+    tempErrors.assignment_date = formValues.assignment_date ? '' : 'Enter the start date'; 
     setErrors(tempErrors);
     return Object.values(tempErrors).every((x) => x === '');
   };
@@ -106,19 +106,13 @@ export default function NewOrderForm({ onOrderCreated }) {
     e.preventDefault();
     if (validate()) {
       try {
-          const response = await apiService.post('v1/orders/', formValues);
-          console.log('Order create:', response)
+          const response = await apiService.post('orders/api/v1/orders/', formValues)
           if (onOrderCreated) {
             setFormValues(initialFormValues);
             onOrderCreated(); 
           } 
       } catch (err) {
         setError(err.message);
-        console.error('Failed to create Order:', err); 
-
-        if (err.response) {
-          console.error('Error response data:', err.response.data);
-        }
       }
       handleClose();
     }
@@ -127,7 +121,7 @@ export default function NewOrderForm({ onOrderCreated }) {
 
   return (
     <div>
-      <Button variant='contained' onClick={handleOpen}>Nueva Orden</Button>
+      <Button variant='contained' onClick={handleOpen}>New Order</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -136,7 +130,7 @@ export default function NewOrderForm({ onOrderCreated }) {
       >
         <Box sx={style}>
           <header className='flex justify-between align-center'>
-            <div className='flex items-center text-neutral-500 font-semibold'>Nueva Orden</div>
+            <div className='flex items-center text-neutral-500 font-semibold'>New Order</div>
             <Button onClick={handleClose}><X size={24} color="gray" /></Button>
           </header>
           <body className='max-w-2xl px-5 overflow-hidden py-4'>
@@ -155,7 +149,7 @@ export default function NewOrderForm({ onOrderCreated }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="No. de orden"
+                        label="Order number"
                         name="num_of_order"
                         type='number'
                         inputProps={{ min: "0", step: "1" }}
@@ -169,7 +163,7 @@ export default function NewOrderForm({ onOrderCreated }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Descripcion"
+                        label="Description"
                         name="description"
                         value={formValues.description}
                         onChange={handleInputChange}
@@ -181,7 +175,7 @@ export default function NewOrderForm({ onOrderCreated }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Area solicitante"
+                        label="Soliciting area"
                         name="area"
                         value={formValues.area}
                         onChange={handleInputChange}
@@ -193,7 +187,7 @@ export default function NewOrderForm({ onOrderCreated }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Entrega"
+                        label="Delivery"
                         name='carried_by'
                         value={formValues.carried_by}
                         onChange={handleInputChange}
@@ -205,7 +199,7 @@ export default function NewOrderForm({ onOrderCreated }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Autoriza"
+                        label="Authorizes"
                         name="authorized_by"
                         value={formValues.authorized_by}
                         onChange={handleInputChange}
@@ -217,7 +211,7 @@ export default function NewOrderForm({ onOrderCreated }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="No. piezas"
+                        label="No. of pieces"
                         name="num_of_pieces"
                         type="number"
                         inputProps={{ min: "1", step: "1" }}
@@ -229,9 +223,9 @@ export default function NewOrderForm({ onOrderCreated }) {
                     </Grid>
                     <Grid item xs={12}>
                       <FormControl fullWidth size='small'>
-                        <InputLabel id="priority">Prioridad</InputLabel>
+                        <InputLabel id="priority">Priority</InputLabel>
                         <Select
-                          label="Prioridad"
+                          label="Priority"
                           name='priority'
                           value={formValues.priority}
                           onChange={handleInputChange}
@@ -249,9 +243,9 @@ export default function NewOrderForm({ onOrderCreated }) {
                     </Grid>
                     <Grid item xs={12}>
                       <FormControl fullWidth size="small">
-                        <InputLabel id="service">Servicio</InputLabel>
+                        <InputLabel id="service">services</InputLabel>
                         <Select
-                          label="Servicio"
+                          label="Service"
                           name="service"
                           value={formValues.service}
                           onChange={(e) => {
@@ -266,11 +260,11 @@ export default function NewOrderForm({ onOrderCreated }) {
                           }}
                           error={!!errors.service}
                         >
-                          <MenuItem value="3">Reparacion</MenuItem>
-                          <MenuItem value="2">Fabricacion</MenuItem>
-                          <MenuItem value="1">Rectificado</MenuItem>
-                          <MenuItem value="4">Fabricacion Stock</MenuItem>
-                          <MenuItem value="5">Reparacion Stock</MenuItem>
+                          <MenuItem value="3">Repair</MenuItem>
+                          <MenuItem value="2">Manufacturing</MenuItem>
+                          <MenuItem value="1">Grinding</MenuItem>
+                          <MenuItem value="4">Manufacturing Stock</MenuItem>
+                          <MenuItem value="5">Repair Stock</MenuItem>
                         </Select>
                         {<FormHelperText style={{ color: 'red' }}>{errors.service}</FormHelperText>}
                       </FormControl>
@@ -297,30 +291,14 @@ export default function NewOrderForm({ onOrderCreated }) {
                         />
                       </FormControl>
                     </Grid>
-
-                    {/* <Grid item xs={6}>
-                      <TextField
-                        fullWidth
-                        size='small'
-                        label="Fecha de vencimiento"
-                        name="assignment_date"
-                        type="date"
-                        disabled
-                        value={formValues.assignment_date}
-                        onChange={handleInputChange}
-                        error={!!errors.assignment_date}
-                        helperText={errors.assignment_date}
-                      />
-                    </Grid> */}
-
                   </Grid>
                 </FormGroup>
               </FormControl>
             </Box>
           </body>
           <footer className='flex justify-end items-center gap-4'>
-            <Button variant="outlined" onClick={handleClose}>Cancelar</Button>
-            <Button variant="contained" color="primary" onClick={handleSubmit}>Aceptar</Button>
+            <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+            <Button variant="contained" color="primary" onClick={handleSubmit}>Accept</Button>
           </footer>
         </Box>
       </Modal>

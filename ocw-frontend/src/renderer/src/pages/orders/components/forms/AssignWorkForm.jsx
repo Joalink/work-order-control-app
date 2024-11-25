@@ -37,10 +37,7 @@ export default function AsssigWorkForm({ onOrderCreated}) {
 
   useEffect(() => {
     fetchOrdersForProcess();
-    console.log("operator called",fetchOrdersForProcess)
   }, []);
-
-
 
   const timeZone = 'America/Mexico_City';
   const now = moment().tz(timeZone);
@@ -68,7 +65,6 @@ export default function AsssigWorkForm({ onOrderCreated}) {
     full_name: '',
     shift: '',
     work_processes: '',
-
   });
 
   const initialFormValues = {
@@ -89,30 +85,25 @@ export default function AsssigWorkForm({ onOrderCreated}) {
 
   const validate = () => {
     let tempErrors = {};
-    tempErrors.order_with_area = formValues.order_with_area ? '' : 'Ingrese la orden a seleccionar';
-    tempErrors.name = formValues.name ? '' : 'Ingrese el turno a seleccionar';
-    tempErrors.full_name = formValues.full_name ? '' : 'Ingrese el operador a asignar';
-    tempErrors.work_processes = formValues.work_processes ? '' : 'Ingrese el proceso a realizar';
+    tempErrors.order_with_area = formValues.order_with_area ? '' : 'Enter the order to select';
+    tempErrors.name = formValues.name ? '' : 'Enter the turn to select';
+    tempErrors.full_name = formValues.full_name ? '' : 'Enter the operator to assign';
+    tempErrors.work_processes = formValues.work_processes ? '' : 'Enter the process to perform';
     setErrors(tempErrors);
     return Object.values(tempErrors).every((x) => x === '');
   };
-
   const handleOperatorCreated = async () => {
     await fetchOrdersForProcess();
   };
 
   const handleCloseModal = () => {
     setModalOpen(false)
-    console.log("modal close")
     handleOperatorCreated();
-
     setFormValues(prevValues => ({
       ...prevValues,
-      name: '', // Vaciar el campo de turno
-      shift_workers: [], // Vaciar la lista de operadores
+      name: '', 
+      shift_workers: [], 
     }));
-
-    // Volver a seleccionar el turno después de un breve retraso
     setTimeout(() => {
       const selectedShift = shifts.find(shift => shift.id === selectedShift);
       if (selectedShift) {
@@ -126,15 +117,13 @@ export default function AsssigWorkForm({ onOrderCreated}) {
   }
 
   const fetchOrdersForProcess = async () => {
-    console.log('execute fetch orders')
     try {
-      const data = await apiService.get('/work_to_assign');
+      const data = await apiService.get('orders/api/work_to_assign')
       const {orders, shift_workers} = data;
       setOrders(orders);
       setShifts(shift_workers);
       } catch (err) {
         setError(err.message);
-        console.error('failed to load cut orders:',err);
       }
   };
 
@@ -193,16 +182,12 @@ export default function AsssigWorkForm({ onOrderCreated}) {
     e.preventDefault();
     if (validate()) {
       try {
-          const response = await apiService.post('v1/works/', 
-            {
-              work_processes: formValues.work_processes,
-              work_order: formValues.id,
-              shift: formValues.shift_id,
-              operator: formValues.worker_id,
-            },
-          );
-          console.log('Cut Order created:', response)
-
+          const response = await apiService.post('orders/api/v1/works/', {
+            work_processes: formValues.work_processes,
+            work_order: formValues.id,
+            shift: formValues.shift_id,
+            operator: formValues.worker_id
+          })
           if (onOrderCreated) {
             setFormValues(initialFormValues);
             onOrderCreated(); 
@@ -210,15 +195,8 @@ export default function AsssigWorkForm({ onOrderCreated}) {
 
       } catch (err) {
         setError(err.message);
-        console.error('Failed to create Order:', err); 
-
-        if (err.response) {
-          console.error('Error response data:', err.response.data);
-        }
       }
       handleClose();
-    } else {
-      console.log('Na validate')
     }
 
     useEffect(() => {
@@ -254,7 +232,7 @@ export default function AsssigWorkForm({ onOrderCreated}) {
 
   return (
     <div>
-      <Button variant='contained' color='primary' onClick={handleOpen}>Asignar Trabajo</Button>
+      <Button variant='contained' color='primary' onClick={handleOpen}>Assign Work</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -263,7 +241,7 @@ export default function AsssigWorkForm({ onOrderCreated}) {
       >
         <Box sx={style}>
           <header className='flex justify-between align-center'>
-            <div className='flex items-center text-neutral-500 font-semibold'>Asignar Trabajo</div>
+            <div className='flex items-center text-neutral-500 font-semibold'>Assign Work</div>
             <Button onClick={handleClose}><X size={24} color="gray" /></Button>
           </header>
           <body className='max-w-2xl px-5 overflow-hidden py-4'>
@@ -279,11 +257,11 @@ export default function AsssigWorkForm({ onOrderCreated}) {
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <FormControl fullWidth size='small' error={!!errors.order_with_area}>
-                        <InputLabel>No. de orden</InputLabel>
+                        <InputLabel>Order number</InputLabel>
                         <Select
                           fullWidth
                           size='small'
-                          label="No. de orden"
+                          label="Order number"
                           name="order_with_area"
                           value={formValues.order_with_area}
                           onChange={handleInputChange}
@@ -303,7 +281,7 @@ export default function AsssigWorkForm({ onOrderCreated}) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Descripcion"
+                        label="Description"
                         name="description"
                         disabled
                         value={formValues.description}
@@ -316,7 +294,7 @@ export default function AsssigWorkForm({ onOrderCreated}) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Servicio"
+                        label="Service"
                         name="service"
                         disabled
                         value={formValues.service}
@@ -327,11 +305,11 @@ export default function AsssigWorkForm({ onOrderCreated}) {
                     </Grid>
                     <Grid item xs={12}>
                       <FormControl fullWidth size='small' error={!!errors.name}>
-                        <InputLabel>Turno</InputLabel>
+                        <InputLabel> Shift </InputLabel>
                         <Select
                           fullWidth
                           size='small'
-                          label="Turno"
+                          label="Shift"
                           name="name"
                           value={formValues.name}
                           onChange={handleInputChange}
@@ -349,15 +327,11 @@ export default function AsssigWorkForm({ onOrderCreated}) {
                     </Grid>
                     <Grid item xs={10}>
                       <FormControl fullWidth size='small' error={!!errors.full_name}>
-                        <InputLabel
-                          disabled={!formValues.name}
-                          >
-                            Operador
-                        </InputLabel>
+                        <InputLabel disabled={!formValues.name}> Operator </InputLabel>
                         <Select
                           fullWidth
                           size='small'
-                          label="Operador"
+                          label="Operator"
                           name="full_name"
                           disabled={!formValues.name}
                           value={formValues.full_name}
@@ -388,7 +362,7 @@ export default function AsssigWorkForm({ onOrderCreated}) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Proceso a realizar"
+                        label="Work process"
                         name="work_processes"
                         type="work_processes"
                         value={formValues.work_processes}
@@ -403,8 +377,8 @@ export default function AsssigWorkForm({ onOrderCreated}) {
             </Box>
           </body>
           <footer className='flex justify-end items-center gap-4'>
-            <Button variant="outlined" onClick={handleClose}>Cancelar</Button>
-            <Button ype="submit" variant="contained" color="primary" onClick={handleSubmit}>Aceptar</Button>
+            <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+            <Button type="submit" variant="contained" color="primary" onClick={handleSubmit}>Accept</Button>
           </footer>
         </Box>
       </Modal>
@@ -414,7 +388,7 @@ export default function AsssigWorkForm({ onOrderCreated}) {
         open={modalOpen}
         onClose={handleCloseModal}
         selectedShift={selectedShift}
-        onOperatorCreated={handleOperatorCreated}  // Pass the function as a prop
+        onOperatorCreated={handleOperatorCreated} 
       />
     )}
     </div>

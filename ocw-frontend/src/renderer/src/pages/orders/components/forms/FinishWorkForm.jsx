@@ -41,14 +41,12 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
 
   const timeZone = 'America/Mexico_City';
   const now = moment().tz(timeZone);
-
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [errors, setErrors] = useState({});
   const [error, setError] = useState(null);
   const [orders, setOrders] = useState([]);
-
 
   const [formValues, setFormValues] = useState({
     id: '',
@@ -60,7 +58,6 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
     work_processes: '',
     assignment_date: '',
     work_order: '',
-
     start_date: now.format('YYYY-MM-DD'),
     start_time: now.format('HH:mm:ss'),
     end_date: now.format('YYYY-MM-DD'),
@@ -78,7 +75,6 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
     work_processes: '',
     assignment_date: '',
     work_order: '',
-
     start_date: now.format('YYYY-MM-DD'),
     start_time: now.format('HH:mm:ss'),
     end_date: now.format('YYYY-MM-DD'),
@@ -103,24 +99,7 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
           work_order: selectedOrder.work_order,
         });
       }
-    // } 
-  //   else if (name === "end_date") {
-  //     const currentTime = new Date().toISOString().split('T')[1].split('.')[0]; // Obtener la hora actual (HH:MM:SS)
-  //     console.log('date:',value,'time:',currentTime)
-
-  //     setFormValues({
-  //       ...formValues,
-  //       end_date: value,        
-  //       end_time: currentTime,  
-  //     });
-
-  //   }     
-  //   else if (name === "end_time") {
-  //     setFormValues({
-  //       ...formValues,
-  //       end_time: value,  
-  //     });
-   } else {     
+    } else {     
 
       setFormValues({
         ...formValues,
@@ -131,21 +110,19 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
 
   const validate = () => {
     let tempErrors = {};
-    tempErrors.order_area = formValues.order_area ? '' : 'No. de orden es requerido';
-    tempErrors.start_date = formValues.start_date ? '' : 'La fecha de inicio es requerida';
-    tempErrors.end_date = formValues.end_date ? '' : 'La fecha de termino es requerida';
+    tempErrors.order_area = formValues.order_area ? '' : 'Order number is required';
+    tempErrors.start_date = formValues.start_date ? '' : 'Start date is required';
+    tempErrors.end_date = formValues.end_date ? '' : 'End date is required';
     setErrors(tempErrors);
     return Object.values(tempErrors).every((x) => x === '');
   };
 
   const fetchWorkToFinish = async () => {
     try {
-      const data = await apiService.get('/work_to_finish');
-      console.log('wort to finish data success', data);
+      const data = await apiService.get('orders/api/work_to_finish')
       setOrders(data)
       } catch (err) {
         setError(err.message);
-        console.error('failed to load works to finish:',err);
       } finally {
     }
   };
@@ -153,12 +130,8 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log('Form submitted successfully', formValues);
-
       const dataToUpdate = {
-
         work_order: formValues.work_order,
-    
         start_date: formValues.start_date,
         start_time: formValues.start_time,
         end_date: formValues.end_date,
@@ -166,27 +139,17 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
       };
 
       try {
-          const response = await apiService.patch(`v1/works/${formValues.id}/`, dataToUpdate );
-          console.log('id a enviar:',formValues.id)
-          console.log('Datos enviados:', dataToUpdate);
-          console.log('Finish Work validate:', response)
-
-
+          const response = await apiService.patch(`orders/api/v1/works/${formValues.id}/`, dataToUpdate );
           if (onOrderCreated) {
-            console.log('onOrderCreated is being called.');
             setFormValues(initialFormValues);
             onOrderCreated(); 
-          } else {
-            console.warn('onOrderCreated is not defined.');
-          }
+          } 
       } catch (err) {
         setError(err.message);
         console.error('Failed to create Order:', err); 
 
         if (err.response) {
           console.error('Error response data:', err.response.data);
-          // console.error('Error status:', err.response.status);
-          // console.error('Error headers:', err.response.headers);
         }
       }
       handleClose();
@@ -195,7 +158,7 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
 
   return (
     <div>
-      <Button variant='contained' color='success' onClick={handleOpen}>Finalizar trabajo</Button>
+      <Button variant='contained' color='success' onClick={handleOpen}>Finish work</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -204,7 +167,7 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
       >
         <Box sx={style}>
           <header className='flex justify-between align-center'>
-            <div className='flex items-center text-neutral-500 font-semibold'>Finalizar Trabajo</div>
+            <div className='flex items-center text-neutral-500 font-semibold'>Finish work</div>
             <Button onClick={handleClose}><X size={24} color="gray" /></Button>
           </header>
           <body className='max-w-2xl px-5 overflow-hidden py-4'>
@@ -221,12 +184,12 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
 
 
                     <Grid item xs={12}>
-                      <InputLabel size='small'>No. de orden</InputLabel>
+                      <InputLabel size='small'>Order number</InputLabel>
                       <Select
                         fullWidth
                         size='small'
 
-                        label="No. de orden"
+                        label="Order number"
                         name="order_area"
                         value={formValues.order_area}
                         onChange={handleInputChange}
@@ -244,7 +207,7 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Descripcion"
+                        label="Description"
                         name="description"
                         disabled
                         value={formValues.description}
@@ -255,7 +218,7 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Servicio"
+                        label="Service"
                         name="service"
                         disabled
                         value={formValues.service}
@@ -266,7 +229,7 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Turno"
+                        label="Shift"
                         name="shift"
                         disabled
                         value={formValues.shift}
@@ -277,7 +240,7 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Operador"
+                        label="Operator"
                         name="operator"
                         disabled
                         value={formValues.operator}
@@ -288,7 +251,7 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Proceso a realizar"
+                        label="Process to perform"
                         name="work_processes"
                         disabled
                         value={formValues.work_processes}
@@ -299,7 +262,7 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Fecha de inicio"
+                        label="Start date"
                         name="start_date"
                         type="date"
                         InputLabelProps={{shrink: true}}    
@@ -313,7 +276,7 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Fecha de termino"
+                        label="End date"
                         name="end_date"
                         type="date"
                         InputLabelProps={{shrink: true}}    
@@ -327,7 +290,7 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="hora de inicio"
+                        label="Start time"
                         name="start_time"
                         type="time"
                         InputLabelProps={{shrink: true}}    
@@ -341,7 +304,7 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
                       <TextField
                         fullWidth
                         size='small'
-                        label="Hora de termino"
+                        label="End time"
                         name="end_time"
                         type="time"
                         InputLabelProps={{shrink: true}}    
@@ -357,8 +320,8 @@ export default function FinishWorkForm({ onOrderCreated, refreshTrigger }) {
             </Box>
           </body>
           <footer className='flex justify-end items-center gap-4'>
-            <Button variant="outlined" color="success" onClick={handleClose}>Cancelar</Button>
-            <Button variant="contained" color="success" onClick={handleSubmit}>Aceptar</Button>
+            <Button variant="outlined" color="success" onClick={handleClose}>Cancel</Button>
+            <Button variant="contained" color="success" onClick={handleSubmit}>Accept</Button>
           </footer>
         </Box>
       </Modal>

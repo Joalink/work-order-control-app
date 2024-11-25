@@ -1,0 +1,33 @@
+# ignore  migrations
+ocw-backend/migrations/*.pyc
+ocw-backend/migrations/*.py
+
+# ignore temp files
+ocw-backend/__pycache__/
+ocw-backend/*.log
+ocw-backend/*.pot
+ocw-backend/*.pyc
+ocw-backend/*.pyd
+ocw-backend/*.pyo
+
+# virtualenv
+ocw-backend/venv/
+ocw-backend/env/
+
+# ignore local settings
+ocw-backend/local_settings.py
+
+#ignore translation
+ocw-backend/*.po
+ocw-backend/*.mo
+ocw-backend/*.pot
+
+#ignore cache
+ocw-backend/.pytest_cache/
+ocw-backend/.mypy_cache/
+ocw-backend/.coverage
+
+#ignore distribution
+ocw-backend/dist/
+ocw-backend/build/
+ocw-backend/*.egg-info/
