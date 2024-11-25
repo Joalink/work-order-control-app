@@ -25,5 +25,5 @@ urlpatterns = [
     path("api/work_to_finish/", views.work_to_finish_view),
     path("api/order_to_conclude/", views.order_to_conclude_view),
     path("api/generate_PDF/<int:id>/", views.generate_pdf_view),
-    path('docs', include_docs_urls(title="Orders API"))
+    path('docs', include_docs_urls(title="Orders API")),
 ]

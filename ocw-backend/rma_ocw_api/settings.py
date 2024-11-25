@@ -17,6 +17,12 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# STATIC_URL = '/static/'
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'orders/static'),
+# ]
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -26,7 +32,7 @@ SECRET_KEY = 'django-insecure-l=nsjdgvd$z&49*@b4rm3b4)dj_l^rmd^@^y2_9n+1na@zn+*p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -37,11 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # 'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
     'coreapi',
     'orders',
+    'inventory',
 ]
 
 MIDDLEWARE = [
@@ -79,10 +86,21 @@ WSGI_APPLICATION = 'rma_ocw_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ocw_db',
+        'USER': 'postgres',
+        'PASSWORD': 'r3y_Dr4c',
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
 
@@ -137,8 +155,6 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
 ]
 
-
-STATIC_URL = '/static/'
 
 
 # If you have a custom location for static files, add this:

@@ -22,7 +22,8 @@
         </style>
     </head>
     <body>
-        <img src="{% static 'orders/reyma_logo.png' %}" alt="Example Image">
+        {% load static %}
+        <img src="{% static 'images/logo.png' %}" width="200" alt="Logo">
         <div style="width: 100%; text-align: center;">
             <p style="font-size: 25px;">Hoja de reporte de orden {{ order.num_of_order }}</p>
             <hr>
