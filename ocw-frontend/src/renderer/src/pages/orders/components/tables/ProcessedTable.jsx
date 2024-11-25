@@ -14,44 +14,44 @@ import { MoreHorizontal } from 'react-feather';
 const columns = [
     { 
         id: 'num_of_order', 
-        label: 'Orden',
+        label: 'Order',
         minWidth: 100,
     },
     { 
         id: 'description', 
-        label: 'Descripcion', 
+        label: 'Description', 
         minWidth: 300,
         format: (value) => value.toLocaleString('en-US'),
     },
     {
       id: 'service',
-      label: 'Servicio',
+      label: 'Service',
       minWidth: 100,
     },
     {
         id: 'priority',
-        label: 'Prioridad',
+        label: 'Priority',
         minWidth: 100,
         
     },
     {
         id: 'general_status',
-        label: 'Estado',
+        label: 'Status',
         minWidth: 100,
     },
     {
         id: 'material_status',
-        label: 'Estado material',
+        label: 'Material Status',
         minWidth: 100,
     },
     {
       id: 'shift',
-      label: 'Turno',
+      label: 'Shift',
       minWidth: 100,
     },
 ];
 
-export default function ProcessOrdersTable({ refreshTrigger }) {
+export default function ProcessedTable({ refreshTrigger }) {
 
   useEffect(() => {
     fetchProcessOrders();
@@ -78,8 +78,7 @@ export default function ProcessOrdersTable({ refreshTrigger }) {
 
   const fetchProcessOrders = async () => {
     try {
-      const data = await apiService.get('/process_table');
-      console.log('loaded success', data);
+      const data = await apiService.get('orders/api/process_table/')
       setCutOrders(data);
       setRows(data.map(item => createData(
         item.num_of_order,
@@ -118,7 +117,6 @@ export default function ProcessOrdersTable({ refreshTrigger }) {
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
-                // console.log(row)
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                     {columns.map((column) => {

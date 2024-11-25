@@ -15,45 +15,45 @@ import AssignmentCutsTable from './AssignmentCutsTable';
 const columns = [
     {
         id: 'num_of_order',
-        label: 'Orden',
+        label: 'Order',
         minWidth: 100,
     },
     {
         id: 'description',
-        label: 'Descripcion',
+        label: 'Description',
         minWidth: 300,
         format: (value) => value.toLocaleString('en-US'),
     },
     {
         id: 'cut_order',
-        label: 'Orden de corte',
+        label: 'Cut Order',
         minWidth: 100,
 
     },
     {
       id: 'num_of_pieces',
-      label: 'No. de piezas',
+      label: 'No. of pieces',
       minWidth: 100,
     },
     {
         id: 'material_status',
-        label: 'Estado del material',
+        label: 'Material Status',
         minWidth: 100,
     },
     {
         id: 'assigned_cuts',
-        label: 'Cortes asignados',
+        label: 'Assigned Cuts',
         minWidth: 100,
     },
     {
       id: 'actions',
-      label: 'Acciones',
+      label: 'Actions',
       minWidth: 50,
       align: 'center',
   },
 ];
 
-export default function CutOrdersTable({ refreshTrigger }) {
+export default function CuttingTable({ refreshTrigger }) {
 
   useEffect(() => {
     fetchCutOrders();
@@ -93,8 +93,7 @@ export default function CutOrdersTable({ refreshTrigger }) {
 
   const fetchCutOrders = async () => {
     try {
-      const data = await apiService.get('/cut_table');
-      console.log('cut orders loaded:', data);
+      const data = await apiService.get('orders/api/cut_table')
       setCutOrders(data);
       setRows(data.map(item => createData(
         item.num_of_order,
@@ -106,9 +105,7 @@ export default function CutOrdersTable({ refreshTrigger }) {
       )));
       } catch (err) {
         setError(err.message);
-        console.error('failed to load cut orders:',err);
-      } finally {
-    }
+      }
   };
 
   return (

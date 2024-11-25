@@ -7,29 +7,30 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Download, Edit } from 'react-feather';
+import { Download } from 'react-feather';
 import {useEffect, useState} from "react";
 import apiService from '../../../../services/apiService';
+import { generatePDF } from '../../../../utils/generatePDF';
 
 const columns = [
     { 
         id: 'num_of_order', 
-        label: 'Orden',
+        label: 'Order',
         minWidth: 40,
     },
     {
         id: 'description',
-        label: 'Descripcion',
+        label: 'Description',
         minWidth: 300,
     },
     {
         id: 'delivery_date',
-        label: 'Fecha Termino',
+        label: 'Delivery Date',
         minWidth: 80,
     },
     { 
         id: 'service', 
-        label: 'Servicio', 
+        label: 'Service', 
         minWidth: 80
     },
     {
@@ -40,19 +41,19 @@ const columns = [
     },
     {
         id: 'num_of_pieces',
-        label: 'No. de piezas',
+        label: 'No. of pieces',
         minWidth: 100,
         format: (value) => value.toFixed(2),
     },
     {
         id: 'actions',
-        label: 'Acciones',
+        label: 'Actions',
         minWidth: 100,
         align: 'center',
     },
 ];
 
-export default function OrdersTable() {
+export default function FinishedTable() {
 
   useEffect(() => {
     fetchOrders();
@@ -62,7 +63,7 @@ export default function OrdersTable() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState([]);  
   
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -73,17 +74,12 @@ export default function OrdersTable() {
     setPage(0);
   };
 
-  async function handleDownload (row){
-    console.log('Download:', row)
-
+  async function handleDownload(row) {
     try {
-      window.location.href = `http://localhost:8000/orders/api/generate_PDF/${row.id}/`
+      const data = await apiService.get(`orders/api/generate_PDF/${row}`)
+      generatePDF(data)
     } catch (err) {
       setError(err.message)
-      console.log('Failed to download PDF', err)
-      if (err.response) {
-        console.error('Error response data:', err.response.data);
-      }
     }
   }
 
@@ -93,9 +89,8 @@ export default function OrdersTable() {
 
   const fetchOrders = async () => {
     try {
-      const data = await apiService.get('/finished_orders');
+      const data = await apiService.get('orders/api/finished_orders')
       setOrders(data);
-      // console.log('loaded success', data);
       setRows(data.map(item => createData(
         item.id,
         item.num_of_order,
@@ -130,32 +125,24 @@ export default function OrdersTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                            {
-                                column.id === 'actions' ? (
-                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                        <Download 
-                                        color='gray' 
-                                        style={{ cursor: 'pointer', marginRight: 12 }} 
-                                        onClick={() => handleDownload(row)} />
-                                    </div>
-                                ) : 
-                                column.format && typeof value === 'number' ? column.format(value) : value  
-                            }
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+              <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                {columns.map((column) => {
+                  const value = row[column.id];
+                  return (
+                    <TableCell key={column.id} align={column.align}>
+                      {
+                        column.id === 'actions' ? (
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                          <Download color="gray" style={{ cursor: 'pointer', marginRight: 12 }} onClick={() => handleDownload(row.id)}/>
+                        </div>
+                        ) : column.format && typeof value === 'number' ? (column.format(value)) : (value)
+                      }
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -170,4 +157,4 @@ export default function OrdersTable() {
       />
     </Paper>
   );
-}
+};

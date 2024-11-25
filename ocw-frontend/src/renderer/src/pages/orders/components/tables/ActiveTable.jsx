@@ -14,63 +14,59 @@ import apiService from '../../../../services/apiService';
 const columns = [
     {
         id: 'num_of_order',
-        label: 'Orden',
+        label: 'Order',
         minWidth: 40,
     },
     {
       id: 'description',
-      label: 'Descripcion',
+      label: 'Description',
       minWidth: 300,
   },
     {
         id: 'service',
-        label: 'Servicio',
+        label: 'Service',
         minWidth: 80
     },
     {
       id: 'assignment_date',
-      label: 'Fecha Creacion',
+      label: 'Creating Date',
       minWidth: 80,
-      // format: (value) => value.toLocaleString('en-US'),
     },
     {
         id: 'final_date',
-        label: 'Fecha Vencimiento',
+        label: 'Finish Date',
         minWidth: 80,
     },
 
     {
       id: 'material_status',
-      label: 'Estado Material',
+      label: 'Material Status',
       minWidth: 100,
-      // format: (value) => value.toFixed(2),
     },
     {
       id: 'cut_order',
-      label: 'Orden de Corte',
+      label: 'Cut Order',
       minWidth: 100,
-      // format: (value) => value.toFixed(2),
     },
     {
         id: 'general_status',
-        label: 'Estado General',
+        label: 'General Status',
         minWidth: 100,
-        // format: (value) => value.toFixed(2),
     },
     {
       id: 'shift',
-      label: 'Turno',
+      label: 'Shift',
       minWidth: 100,
     },
-    {
-        id: 'actions',
-        label: 'Acciones',
-        minWidth: 100,
-        align: 'center',
-    },
+    // {
+    //     id: 'actions',
+    //     label: 'Actions',
+    //     minWidth: 100,
+    //     align: 'center',
+    // },
 ];
 
-export default function OrdersTable({ refreshTrigger }) {
+export default function ActiveTable({ refreshTrigger }) {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -88,20 +84,28 @@ export default function OrdersTable({ refreshTrigger }) {
     setPage(0);
   };
 
-  function handleEdit (id){
-    console.log('Edit:', id)
-
-  }
+  // function handleEdit (id){
+  // }
 
   function createData(num_of_order, description, service, assignment_date, final_date, material_status, cut_order, general_status, shift, actions) {
-    return { num_of_order, description, service, assignment_date, final_date, material_status, cut_order, general_status, shift, actions };
+    return { 
+      num_of_order, 
+      description, 
+      service, 
+      assignment_date, 
+      final_date, 
+      material_status, 
+      cut_order, 
+      general_status, 
+      shift, 
+      actions 
+    };
   }
 
   const fetchOrders = async () => {
     try {
-      const data = await apiService.get('/main_table');
+      const data = await apiService.get('orders/api/main_table')
       setOrders(data);
-      console.log('orders loaded success', data);
       setRows(data.map(item => createData(
         item.num_of_order,
         item.description,
@@ -115,14 +119,11 @@ export default function OrdersTable({ refreshTrigger }) {
       )));
       } catch (err) {
         setError(err.message);
-        console.error('failed to load orders:',err);
-      } finally {
-    }
+      } 
   };
 
 
   useEffect(() => {
-    // console.log('useEffect triggered with refreshTrigger:', refreshTrigger);
     fetchOrders();
   }, [refreshTrigger]);
 

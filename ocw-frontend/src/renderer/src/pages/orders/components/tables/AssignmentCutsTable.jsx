@@ -24,21 +24,21 @@ const style = {
     boxShadow: 24,
     p: 4,
     borderRadius: '10px',
-  };
+};
 
 const columns = [
-    { id: 'num_cut_order', label: 'Orden de corte', minWidth: 100 },
-    { id: 'work_order', label: 'Orden', minWidth: 100 },
-    { id: 'material_status', label: 'Estado material', minWidth: 100 },
-    { id: 'material_type', label: 'Tipo de material', minWidth: 100 },
-    { id: 'material_quantity', label: 'Cantidad de material', minWidth: 100 },
-    { id: 'observation', label: 'Observaciones', minWidth: 200 },
+    { id: 'num_cut_order', label: 'No. of cut order', minWidth: 100 },
+    { id: 'work_order', label: 'Order', minWidth: 100 },
+    { id: 'material_status', label: 'Material Status', minWidth: 100 },
+    { id: 'material_type', label: 'Material Type', minWidth: 100 },
+    { id: 'material_quantity', label: 'Material Quantity', minWidth: 100 },
+    { id: 'observation', label: 'Observations', minWidth: 200 },
 ];
 
 export default function AssignmentCutsTable({ refreshTrigger, open, onClose, selectedOrder }) {
 
     useEffect(() => {
-            fetchAssignedCuts();
+        fetchAssignedCuts();
     }, 
     [refreshTrigger, open]
     );
@@ -51,12 +51,12 @@ export default function AssignmentCutsTable({ refreshTrigger, open, onClose, sel
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
-      };
+    };
     
-      const handleChangeRowsPerPage = (event) => {
+    const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
-      };
+    };
 
     function createData(num_cut_order, work_order, material_status, material_type, material_quantity, observation) {
         return {num_cut_order, work_order, material_status, material_type, material_quantity, observation};
@@ -64,13 +64,9 @@ export default function AssignmentCutsTable({ refreshTrigger, open, onClose, sel
 
     const fetchAssignedCuts = async () => {
         try {
-        const data = await apiService.get('/cuts_order_table/');
-        console.log('loaded cuts orders table ', data);
+        const data = await apiService.get('orders/api/cuts_order_table/')
         setData(data);
-
         const filterData = data.filter(order => order.work_order === selectedOrder)
-        console.log('cuts filter:',filterData)
-
         setRows(filterData.map(item => createData(
             item.num_cut_order,
             item.work_order,
@@ -123,7 +119,6 @@ export default function AssignmentCutsTable({ refreshTrigger, open, onClose, sel
                                         <TableBody>
                                             {rows
                                             .map((row) => {
-                                                console.log(row)
                                                 return (
                                                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                                                     {columns.map((column) => {

@@ -6,14 +6,8 @@ import {
   Button,
   Grid,
   Box,
-  Typography,
   FormControl,
-  FormLabel,
   FormGroup,
-  FormHelperText,
-  Select,
-  InputLabel,
-  MenuItem
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import apiService from '../../../../services/apiService';
@@ -56,8 +50,8 @@ export default function AddOperatorForm({ open, onClose, selectedShift, onOperat
 
   const validate = () => {
     let tempErrors = {};
-    tempErrors.first_name = formValues.first_name ? '' : 'Ingrese el nombre del operador';
-    tempErrors.last_name = formValues.last_name ? '': 'Ingrese los apellidos del operador';
+    tempErrors.first_name = formValues.first_name ? '' : 'Enter the  operator first name';
+    tempErrors.last_name = formValues.last_name ? '': 'Enter the operator last name';
     setErrors(tempErrors);
     return Object.values(tempErrors).every((x) => x === '');
   };
@@ -82,26 +76,14 @@ export default function AddOperatorForm({ open, onClose, selectedShift, onOperat
     e.preventDefault();
     if (validate()) {
       try {
-          const response = await apiService.post('v1/workers/', formValues);
-          console.log('Operador agregado:', response)
-
-
+          const response = await apiService.post('orders/api/v1/workers/', formValues)
           setFormValues(initialFormValues);
-
           if (onOperatorCreated) {
             onOperatorCreated();
           }
-
           onClose();
-
-
       } catch (err) {
         setError(err.message);
-        console.error('Failed to create Order:', err); 
-
-        if (err.response) {
-          console.error('Error response data:', err.response.data);
-        }
       }
     }
   };
@@ -116,7 +98,7 @@ export default function AddOperatorForm({ open, onClose, selectedShift, onOperat
       >
         <Box sx={style}>
           <header className='flex justify-between align-center'>
-            <div className='flex items-center text-neutral-500 font-semibold'>Nuevo Operador</div>
+            <div className='flex items-center text-neutral-500 font-semibold'>New Operator</div>
             <Button onClick={onClose}><X size={24} color="gray" /></Button>
           </header>
           <body className='max-w-2xl px-5 overflow-hidden py-4'>
@@ -134,7 +116,7 @@ export default function AddOperatorForm({ open, onClose, selectedShift, onOperat
                       <TextField
                         fullWidth
                         size='small'
-                        label="Nombre(s)"
+                        label="First name(s)"
                         name="first_name"
                         value={formValues.first_name}
                         onChange={handleInputChange}
@@ -146,7 +128,7 @@ export default function AddOperatorForm({ open, onClose, selectedShift, onOperat
                       <TextField
                         fullWidth
                         size='small'
-                        label="Apellidos"
+                        label="Last name"
                         name="last_name"
                         value={formValues.last_name}
                         onChange={handleInputChange}
