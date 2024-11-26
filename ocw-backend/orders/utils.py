@@ -2,27 +2,27 @@
 
 def general_status(order):
     if order.delivery_date:
-            return 'Entregado'
+            return 'Delivered'
     if order.assigned_works.all():
         if order.assigned_works.all().first().start_date:
-            return 'Trabajo terminado'
-        return 'En proceso de trabajo'
+            return 'Work completed'
+        return 'In process of work'
     if not order.need_material:
-        return 'Trabajo por realizar'
+        return 'Work to be performed'
     if not order.cut_orders.all():
-        return 'Material pendiente'
+        return 'Material pending'
     for cut_order in order.cut_orders.all():
         if not cut_order.delivery_date:
-            return 'Material pendiente'
-    return 'Trabajo por realizar'
+            return 'Material pending'
+    return 'Work to be performed'
 
 
 def cut_order(order):
         if not order.need_material:
-            return 'No necesita'
+            return 'No need for'
         cut_orders = order.cut_orders.all()
         if not cut_orders:
-            return 'No asignada'
+            return 'Not assigned'
         orders_count = cut_orders.count()
         if orders_count == 1:
             return cut_orders.last().num_cut_order
@@ -35,26 +35,26 @@ def cut_order(order):
     
 def material_status(order):
         if not order.need_material:
-            return 'No necesita'
+            return 'No need for'
         cut_orders = order.cut_orders.all()
         if not cut_orders:
-            return 'No solicitado'
+            return 'Not requested'
         orders_count = cut_orders.count()
         if orders_count == 1:
             if cut_orders.first().delivery_date:
-                return 'Entregado'
+                return 'Delivered'
             return 'Solicitado'
         count = 0
         for cut_order in cut_orders:
             if cut_order.delivery_date:
                 count += 1
         if orders_count == count:
-            return 'Entregados'
+            return 'Delivered'
         return f'{count} de {orders_count}'
     
     
 def is_work_to_perform(order):
-    return general_status(order) == 'Trabajo por realizar'
+    return general_status(order) == 'Work to be performed'
 
 
 def check_deliveries(order):

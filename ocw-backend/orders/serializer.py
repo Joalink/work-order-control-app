@@ -78,7 +78,7 @@ class MainTableSerializer(serializers.ModelSerializer):
     def get_shift(self, obj):
         if obj.assigned_works.all():
             return obj.assigned_works.first().shift.name
-        return 'No asignado'
+        return 'Not assigned'
     
     def get_service(self, obj):
         return obj.service.s_type
@@ -128,7 +128,7 @@ class ProcessTableSerializer(serializers.ModelSerializer):
     def get_shift(self, obj):
         if obj.assigned_works.all():
             return obj.assigned_works.first().shift.name
-        return 'No asignado'
+        return 'Not assigned'
     
     def get_priority(self, obj):
         return obj.priority.priority_num + ' | ' + str(obj.priority.days) + 'd'
@@ -145,8 +145,8 @@ class CutsByOrderSerializer(serializers.ModelSerializer):
         
     def get_material_status(self, obj):
         if obj.delivery_date:
-            return 'Entregado'
-        return 'Solicitado'
+            return 'Delivered'
+        return 'Delivered'
     
     def get_work_order(self, obj):
         return obj.work_order.num_of_order
@@ -272,6 +272,6 @@ class OrderToConcludeSerializer(serializers.ModelSerializer):
     
     def get_need_material(self, obj):
         if obj.need_material:
-            return 'Sí'
+            return 'Yes'
         return 'No'
     

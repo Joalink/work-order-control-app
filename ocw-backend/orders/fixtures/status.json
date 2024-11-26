@@ -3,35 +3,35 @@
         "model": "orders.GeneralStatus",
         "pk": 1,
         "fields": {
-            "status": "Material pendiente"
+            "status": "Material pending"
         }
     },
     {
         "model": "orders.GeneralStatus",
         "pk": 2,
         "fields": {
-            "status": "Trabajo por realizar"
+            "status": "Work to be performed"
         }
     },
     {
         "model": "orders.GeneralStatus",
         "pk": 3,
         "fields": {
-            "status": "En proceso de trabajo"
+            "status": "In process of work"
         }
     },
     {
         "model": "orders.GeneralStatus",
         "pk": 4,
         "fields": {
-            "status": "Trabajo terminado"
+            "status": "Work completed"
         }
     },
     {
         "model": "orders.GeneralStatus",
         "pk": 5,
         "fields": {
-            "status": "Entregado"
+            "status": "Delivered"
         }
     }
 ]
