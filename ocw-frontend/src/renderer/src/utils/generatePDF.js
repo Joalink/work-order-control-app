@@ -34,38 +34,39 @@ export const generatePDF = (data) => {
   let y = 45
 
   const { mainData, cutOrdersData } = convertToArray(data)
-
+  
   const labelMap = {
-    num_of_order: 'Número de orden',
-    area: 'Área que solicita',
-    description: 'Descripción',
-    carried_by: 'Entrega',
-    authorized_by: 'Autoriza',
-    num_of_pieces: 'Número de piezas',
-    assignment_date: ' Fecha de asignación',
-    priority_num: 'Prioridad',
-    service_type: 'Servicio',
-    need_material: 'Material',
-    'assigned_work.shift_name': 'Turno',
-    'assigned_work.operator_full_name': 'Operador',
-    'assigned_work.work_processes': 'Procesos que llevó',
-    'assigned_work.start_date': 'Inicio de trabajo',
-    'assigned_work.end_date': 'Fín de trabajo',
-    'assigned_work.total_days': 'Días totales',
-    delivery_date: 'Fecha de entrega',
-    received_by: 'Recoge',
-    delivered_by: 'Entrega'
+  num_of_order: 'Order Number',
+  area: 'Requesting Area',
+  description: 'Description',
+  carried_by: 'Delivered By',
+  authorized_by: 'Authorized By',
+  num_of_pieces: 'Number of Pieces',
+  assignment_date: 'Assignment Date',
+  priority_num: 'Priority',
+  service_type: 'Service Type',
+  need_material: 'Material',
+  'assigned_work.shift_name': 'Shift',
+  'assigned_work.operator_full_name': 'Operator',
+  'assigned_work.work_processes': 'Processes Performed',
+  'assigned_work.start_date': 'Work Start Date',
+  'assigned_work.end_date': 'Work End Date',
+  'assigned_work.total_days': 'Total Days',
+  delivery_date: 'Delivery Date',
+  received_by: 'Received By',
+  delivered_by: 'Delivered By'
   }
 
   const labelMapCutOrders = {
-    num_cut_order: 'No. órden de corte',
-    material_type: 'Tipo de material',
-    material_quantity: 'Cantidad de material',
-    request_date: 'Fecha de solicitud',
-    delivery_date: 'Fecha de entrega',
-    material_weight: 'Peso del material',
-    observations: 'Observaciones'
+    num_cut_order: 'Cut Order Number',
+    material_type: 'Material Type',
+    material_quantity: 'Material Quantity',
+    request_date: 'Request Date',
+    delivery_date: 'Delivery Date',
+    material_weight: 'Material Weight',
+    observations: 'Observations'
   }
+
 
   doc.setFont('Georgia', 'normal')
   doc.setFontSize(10)

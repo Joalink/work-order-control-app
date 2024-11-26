@@ -31,3 +31,9 @@ ocw-backend/.coverage
 ocw-backend/dist/
 ocw-backend/build/
 ocw-backend/*.egg-info/
+
+ocw-frontend/node_modules
+ocw-frontend/dist
+ocw-frontend/out
+ocw-frontend/.DS_Store
+ocw-frontend/*.log*

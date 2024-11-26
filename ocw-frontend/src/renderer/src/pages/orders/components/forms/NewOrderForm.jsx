@@ -231,7 +231,7 @@ export default function NewOrderForm({ onOrderCreated }) {
                           onChange={handleInputChange}
                           error={!!errors.priority}
                         >
-                          <MenuItem value="1">Urgente | 1d</MenuItem>
+                          <MenuItem value="1">Urgent | 1d</MenuItem>
                           <MenuItem value="2">1 | 2d</MenuItem>
                           <MenuItem value="3">2 | 4d</MenuItem>
                           <MenuItem value="4">3 | 8d</MenuItem>

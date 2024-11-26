@@ -4,7 +4,6 @@ from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import HttpResponse, JsonResponse
-from xhtml2pdf import pisa
 from django.template.loader import render_to_string, get_template
 from .serializer import *
 from .models import WorkOrder, CutOrder, AssignedWork, GeneralStatus, ServiceType, Priority, Worker, Shift
@@ -19,9 +18,9 @@ class WorkOrdersView(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         need_material = serializer.validated_data.get('need_material')
         if need_material:
-            current_status = 'Material pendiente'
+            current_status = 'Material pending'
         else:
-            current_status = 'Trabajo por realizar'
+            current_status = 'Work to be performed'
         
         new_order = serializer.save()
         new_order.current_status = GeneralStatus.objects.get(status=current_status)
@@ -29,7 +28,7 @@ class WorkOrdersView(viewsets.ModelViewSet):
         
     def perform_update(self, serializer):
         updated_order = serializer.save()
-        updated_order.current_status = GeneralStatus.objects.get(status='Entregado')
+        updated_order.current_status = GeneralStatus.objects.get(status='Delivered')
         updated_order.save()
         
         
@@ -58,14 +57,14 @@ class CutOrdersView(viewsets.ModelViewSet):
         serializer.save()
         
         order = serializer.validated_data.get('work_order')
-        order.current_status = GeneralStatus.objects.get(status='Material pendiente')
+        order.current_status = GeneralStatus.objects.get(status='Material pending')
         order.save()
         
     def perform_update(self, serializer):
         serializer.save()
         order = serializer.validated_data.get('work_order')
         if check_deliveries(order):
-            order.current_status = GeneralStatus.objects.get(status='Trabajo por realizar')
+            order.current_status = GeneralStatus.objects.get(status='Work to be performed')
             order.save()
         
 # Handle creation and updates of assigned works
@@ -76,19 +75,19 @@ class WorksView(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save()
         order = serializer.validated_data.get('work_order')
-        order.current_status = GeneralStatus.objects.get(status='En proceso de trabajo')
+        order.current_status = GeneralStatus.objects.get(status='In process of work')
         order.save()
         
     def perform_update(self, serializer):
         serializer.save()
         order = serializer.validated_data.get('work_order')
-        order.current_status = GeneralStatus.objects.get(status='Trabajo terminado')
+        order.current_status = GeneralStatus.objects.get(status='Work completed')
         order.save()
     
         
 class MainTableView(generics.ListAPIView):
     serializer_class = MainTableSerializer
-    queryset = WorkOrder.objects.filter(delivery_date__isnull=True).all().order_by('-assignment_date')
+    queryset = WorkOrder.objects.filter(delivery_date__isnull=True).all().order_by('assignment_date')
     
 main_table_view = MainTableView.as_view()
     
@@ -108,8 +107,8 @@ class ProcessTableView(generics.ListAPIView):
     serializer_class = ProcessTableSerializer
     
     def get_queryset(self):
-        to_perform = GeneralStatus.objects.get(status='Trabajo por realizar')
-        in_process = GeneralStatus.objects.get(status='En proceso de trabajo')
+        to_perform = GeneralStatus.objects.get(status='Work to be performed')
+        in_process = GeneralStatus.objects.get(status='In process of work')
         queryset = WorkOrder.objects.filter(Q(current_status=to_perform) | Q(current_status=in_process)).all()
         
         return queryset
@@ -154,7 +153,7 @@ new_order_form_view = NewOrderFormView.as_view()
 class FinishedOrdersView(generics.ListAPIView):
     serializer_class = FinishedOrdersSerializer
     def get_queryset(self):
-        finished = GeneralStatus.objects.get(status='Entregado')
+        finished = GeneralStatus.objects.get(status='Delivered')
         queryset = WorkOrder.objects.filter(current_status=finished).all()
         
         return queryset
@@ -183,7 +182,7 @@ material_for_delivery_view = MaterialForDeliveryView.as_view()
 class WorkToAssignView(APIView):
     def get(self, request, *args, **kwargs):
         
-        to_perform = GeneralStatus.objects.get(status='Trabajo por realizar')
+        to_perform = GeneralStatus.objects.get(status='Work to be performed')
         
         orders_serializer = SimpleOrderSerializer(WorkOrder.objects.filter(current_status=to_perform).all(), many=True, read_only=True)
         shift_w_serializer = ShiftWorkersSerializer(Shift.objects.all(), many=True, read_only=True)
@@ -209,7 +208,7 @@ class OrderToConcludeView(generics.ListAPIView):
     serializer_class = OrderToConcludeSerializer
     
     def get_queryset(self):
-        finished_work = GeneralStatus.objects.get(status='Trabajo terminado')
+        finished_work = GeneralStatus.objects.get(status='Work completed')
         queryset = WorkOrder.objects.filter(current_status=finished_work).all()
         
         return queryset
@@ -220,7 +219,7 @@ class GeneratePDFView(APIView):
 
     def get(self, request, *args, **kwargs):
         
-        order = get_object_or_404(WorkOrder.objects.filter(current_status=GeneralStatus.objects.get(status='Entregado')), id=self.kwargs.get('id'))
+        order = get_object_or_404(WorkOrder.objects.filter(current_status=GeneralStatus.objects.get(status='Delivered')), id=self.kwargs.get('id'))
         
         order_data = {
             "num_of_order": order.num_of_order,
