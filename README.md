@@ -3,14 +3,13 @@ ORDERS SYSTEM APP
 The project consists of on a system that manahe the flow of the orders, facilitating the process of order creation, order validation, and order fulfillment. Also add features la dashboard visulization, pdf  report generation, inventory management, anda  acustom calculator for personalization.
 ![alt text](ocw_cover.webp)
 
-Stack
-Electron + Vite + React 
-Tailwind CSS
-Eslint
-Prettier
-Django Rest Framework
-PostgreSQL
-Docker
+- **Electron + Vite + React
+- **Tailwind CSS
+- **ESLint
+- **Prettier
+- **Django Rest Framework
+- **PostgreSQL
+- **Docker
 
 Usage
 
@@ -18,15 +17,16 @@ To usage run the next commands:
 
 
 BACKEND
+
 Docker compose up --build
 
 --only the first time
 
-docker-compose exec backend python manage.py migrate
-docker-compose exec backend python manage.py loaddata orders/fixtures/priority.json
-docker-compose exec backend python manage.py loaddata orders/fixtures/service.json
-docker-compose exec backend python manage.py loaddata orders/fixtures/shifts.json
-docker-compose exec backend python manage.py loaddata orders/fixtures/status.json
+- **docker-compose exec backend python manage.py migrate
+- **docker-compose exec backend python manage.py loaddata orders/fixtures/priority.json
+- **docker-compose exec backend python manage.py loaddata orders/fixtures/service.json
+- **docker-compose exec backend python manage.py loaddata orders/fixtures/shifts.json
+- **docker-compose exec backend python manage.py loaddata orders/fixtures/status.json
 
 FRONTEND
 
