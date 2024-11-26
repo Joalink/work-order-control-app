@@ -13,44 +13,44 @@ import apiService from '../../../../services/apiService';
 import { generatePDF } from '../../../../utils/generatePDF';
 
 const columns = [
-    { 
-        id: 'num_of_order', 
-        label: 'Order',
-        minWidth: 40,
-    },
-    {
-        id: 'description',
-        label: 'Description',
-        minWidth: 300,
-    },
-    {
-        id: 'delivery_date',
-        label: 'Delivery Date',
-        minWidth: 80,
-    },
-    { 
-        id: 'service', 
-        label: 'Service', 
-        minWidth: 80
-    },
-    {
-      id: 'area',
-      label: 'Area',
-      minWidth: 100,
-      format: (value) => value.toFixed(2),
-    },
-    {
-        id: 'num_of_pieces',
-        label: 'No. of pieces',
-        minWidth: 100,
-        format: (value) => value.toFixed(2),
-    },
-    {
-        id: 'actions',
-        label: 'Actions',
-        minWidth: 100,
-        align: 'center',
-    },
+  { 
+    id: 'num_of_order', 
+    label: 'Order',
+    minWidth: 40,
+  },
+  {
+    id: 'description',
+    label: 'Description',
+    minWidth: 300,
+  },
+  {
+    id: 'delivery_date',
+    label: 'Delivery Date',
+    minWidth: 80,
+  },
+  { 
+    id: 'service', 
+    label: 'Service', 
+    minWidth: 80
+  },
+  {
+    id: 'area',
+    label: 'Area',
+    minWidth: 100,
+    format: (value) => value.toFixed(2),
+  },
+  {
+    id: 'num_of_pieces',
+    label: 'No. of pieces',
+    minWidth: 100,
+    format: (value) => value.toFixed(2),
+  },
+  {
+    id: 'actions',
+    label: 'Actions',
+    minWidth: 100,
+    align: 'center',
+  },
 ];
 
 export default function FinishedTable() {

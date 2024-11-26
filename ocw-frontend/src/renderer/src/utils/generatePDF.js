@@ -26,9 +26,9 @@ export const generatePDF = (data) => {
   doc.setFont('Georgia', 'bold')
   doc.setFontSize(14)
   doc.setTextColor(0)
-  doc.text('Grupo Reyma', 50, 10, { align: 'left' })
-  doc.text('Lunes, 5 marzo del 2025', 50, 20, { align: 'left' })
-  doc.text('Leon, Guanajuato', 50, 30, { align: 'left' })
+  doc.text('Name of the Bussiness', 50, 10, { align: 'left' })
+  doc.text("Monday, March 5, 2025", 50, 20, { align: 'left' })
+  doc.text('Guanajuato, Mexico', 50, 30, { align: 'left' })
   doc.setDrawColor(40)
   doc.line(10, 35, 200, 35)
   let y = 45
