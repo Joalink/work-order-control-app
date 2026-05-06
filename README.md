@@ -1,107 +1,159 @@
-ORDERS SYSTEM APP
+# 📦 Orders Management System
 
-The project consists of on a system that manahe the flow of the orders, facilitating the process of order creation, order validation, and order fulfillment. Also add features la dashboard visulization, pdf  report generation, inventory management, anda  acustom calculator for personalization.
-![alt text](./img/ocw_cover.webp)
 
-- Electron + Vite + React
+
+A full-stack desktop application to manage the complete lifecycle of orders — from creation to fulfillment — with analytics, inventory control, and reporting.
+
+## 🚀 Overview
+
+ This system streamlines operational workflows by integrating:
+
+- Order creation and validation
+- Production stages (cutting and processing)
+- Inventory tracking
+- Data visualization dashboards
+- Automated PDF reporting
+- Custom calculation tools
+
+Built as a portfolio project to demonstrate real-world system design and full-stack development.
+
+## 🖼️ Preview
+![Dashboard](docs/images/dashboard.png)
+![Orders](docs/images/orders.png)
+![Inventory](docs/images/inventory.png)
+
+
+## 🛠 Tech Stack
+
+**Frontend**
+
+- Electron
+- Vite
+- React
 - Tailwind CSS
+
+**Backend**
+
+- Django REST Framework
+- PostgreSQL
+
+**Tools**
+
+- Docker
 - ESLint
 - Prettier
-- Django Rest Framework
-- PostgreSQL
-- Docker
-
-Usage
-
-To usage run the next commands:
 
 
-BACKEND
 
-Docker compose up --build
+## ⚙️ Setup
 
-Only the first time!
-- docker-compose exec backend python manage.py migrate
-- docker-compose exec backend python manage.py loaddata orders/fixtures/priority.json
-- docker-compose exec backend python manage.py loaddata orders/fixtures/service.json
-- docker-compose exec backend python manage.py loaddata orders/fixtures/shifts.json
-- docker-compose exec backend python manage.py loaddata orders/fixtures/status.json
+1. **Clone repository**
 
-FRONTEND
+```bash
+git clone https://github.com/joalink/work-order-control-app.git
+cd work-order-control-app
+```
 
-cd .\ocw-frontend\
 
-Then:
+2. **Backend (Docker)**
 
+
+```bash
+docker-compose up --build
+```
+First-time setup:
+
+```bash
+docker-compose exec backend python manage.py migrate
+docker-compose exec backend python manage.py loaddata orders/fixtures/priority.json
+docker-compose exec backend python manage.py loaddata orders/fixtures/service.json
+docker-compose exec backend python manage.py loaddata orders/fixtures/shifts.json
+docker-compose exec backend python manage.py loaddata orders/fixtures/status.json
+```
+
+
+3. **Frontend**
+
+```
+cd ./ocw-frontend
+npm install
 npm run build
+```
 
-Operation:
+## 🧭 Features
 
-We have 4 sections in the app:
+### 📑 Orders Workflow
 
-1. Orders
-2. Dashboard
-3. Calulator
-4. Inventory
+- Create and manage orders
+- Assign services (cut material or processing)
+- Track order status (active / completed)
 
-in orders yo can create orders finished active orders.
-![alt text](./img/image-3.png)
+**Production flow:**
 
-When you create an order you can select the service if this will be send to cut material or processed orders (when pass to cut material and finished this will also be send to processed orders).
+- Create order
+- Send to cut material
+- Complete cutting
+- Send to processing
+- Complete processing
+- Finalize order
+- Generate PDF report
 
-On cut material you create a new cut order and finished this, also you can check the cuts assigned
-![alt text](./img/image.png)
-![alt text](./img/image-1.png)
-![alt text](./img/image-2.png)
+### 📊 Dashboard
 
-then to process orders you can create a new process order and finished this.
-![alt text](./img/image-4.png)
-![alt text](./img/image-5.png)
-then you have to finalize the order
-![alt text](./img/image-6.png)
+- Visual analytics of orders
+- Operational insights
 
-and with this you can download the pdf report
-![alt text](./img/image-7.png)
-![alt text](./img/image-8.png)
+### 🧮 Calculator
 
+- Customizable calculation tool
+- Adaptable to business needs
 
-2 - DASHBOARD
+### 📦 Inventory
 
-here is where you can see the graphics of the orders
-![alt text](./img/image-9.png)
+- Product and location management
+- Stock creation and updates
+- Stock transfers between locations
+- Export movements to Excel
 
-3 - CALCULATOR
+## 📁 Project Structure
 
-This is only an extra feature this can be costumized to the needs 
-![alt text](./img/image-10.png)
+```bash
+orders-system/
+├── docker-compose.yml
+├── README.md
+├── ocw-backend/
+│    ├── inventory
+│    ├── orders
+│    ├── rma_ocw_api
+│    ├── Dockerfile
+│    ├── entrypoint.sh
+│    ├── manage.py
+│    └── requirements.txt
+│    
+└── ocw-frontend/
+    └── src
+        ├── main
+        ├── preload
+        └── render
+            └── src
+                ├── components
+                └── pages
+                    ├── analytics
+                    ├── dashboard
+                    ├── inventory
+                    ├── orders
+                    ├── services
+                    ├── utils
+                    ├── App.jsx
+                    └── main.jsx                    
 
-4 - INVENTORY
+```
 
-This is the inventory management, you can see the inventory and the orders that are assigned to the inventory
-the steps to geenrate a stock are the following:
+## 👤 Author
 
-1. Create a new product
-![alt text](./img/image-11.png)
-you can also delete or updata the product data
-![alt text](./img/image-12.png)
-![alt text](./img/image-13.png)
-2. Create a new location
-![alt text](./img/image-14.png)
-at the same form you can also delete or update the location data
-![alt text](./img/image-15.png)
-![alt text](./img/image-16.png)
+JoaLink
 
-then you have can create a new stock
-![alt text](./img/image-18.png)
-
-also you can add, delete stock 
-![alt text](./img/image-19.png)
-![alt text](./img/image-20.png)
-
-or generate a movements beetween the stocks
-![alt text](./img/image-21.png)
-![alt text](./img/image-22.png)
-
-in the movements you can dowenload an exel with all the data from de movements
-![alt text](./img/image-23.png)
-![alt text](./img/image-24.png)
+## ⭐ Notes
+- Built for portfolio purposes
+- Focused on real workflow simulation
+- Demonstrates full-stack architecture and modular design
